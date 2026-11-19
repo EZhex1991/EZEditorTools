@@ -31,7 +31,7 @@ namespace EZhex1991.EZEditorTools
             serializedObject.Update();
             EZEditorGUIUtility.ScriptableObjectTitle(target as ScriptableObject, !serializedObject.isEditingMultipleObjects);
 
-            EditorGUILayout.PropertyField(m_FilePath);
+            EditorGUILayout.PropertyField(m_FilePath, new GUIContent("Output Folder"));
             if (GUILayout.Button("Open Folder"))
             {
                 if (!string.IsNullOrEmpty(m_FilePath.stringValue)) Directory.CreateDirectory(m_FilePath.stringValue);
@@ -40,7 +40,7 @@ namespace EZhex1991.EZEditorTools
             }
 
             EditorGUILayout.Space();
-            EditorGUILayout.HelpBox("Game View Capture is only available when playing", MessageType.Info);
+            EditorGUILayout.HelpBox("Enter Play Mode to use Game View Capture.", MessageType.Warning);
             GUI.enabled = EditorApplication.isPlaying;
             if (GUILayout.Button("Game View Capture"))
             {
@@ -53,6 +53,10 @@ namespace EZhex1991.EZEditorTools
             camera = (Camera)EditorGUILayout.ObjectField("Target Camera", camera, typeof(Camera), true);
             EditorGUILayout.PropertyField(m_Resolution);
             EditorGUILayout.PropertyField(m_TextureFormat);
+            if (camera == null)
+            {
+                EditorGUILayout.HelpBox("Please assign a Target Camera before using Camera Capture.", MessageType.Warning);
+            }
             if (camera == null) GUI.enabled = false;
             if (GUILayout.Button("Camera Capture"))
             {

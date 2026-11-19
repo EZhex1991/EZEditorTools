@@ -23,7 +23,7 @@ namespace EZhex1991.EZEditorTools
         private SerializedProperty m_FilePatterns;
         private SerializedProperty m_IncludePaths;
         private SerializedProperty m_ExcludePaths;
-        private SerializedProperty m_InfoLineCount;
+        private SerializedProperty m_HeaderLineCount;
         private SerializedProperty m_AuthorRegex;
         private SerializedProperty m_CreateTimeRegex;
         private SerializedProperty m_ValidLineRegex;
@@ -34,7 +34,7 @@ namespace EZhex1991.EZEditorTools
             m_FilePatterns = serializedObject.FindProperty("filePatterns");
             m_IncludePaths = serializedObject.FindProperty("includePaths");
             m_ExcludePaths = serializedObject.FindProperty("excludePaths");
-            m_InfoLineCount = serializedObject.FindProperty("infoLineCount");
+            m_HeaderLineCount = serializedObject.FindProperty("headerLineCount");
             m_AuthorRegex = serializedObject.FindProperty("authorRegex");
             m_CreateTimeRegex = serializedObject.FindProperty("createTimeRegex");
             m_ValidLineRegex = serializedObject.FindProperty("validLineRegex");
@@ -44,16 +44,16 @@ namespace EZhex1991.EZEditorTools
             serializedObject.Update();
             EZEditorGUIUtility.ScriptableObjectTitle(target as ScriptableObject, !serializedObject.isEditingMultipleObjects);
 
-            EditorGUILayout.LabelField("File Association", EditorStyles.boldLabel);
+            EditorGUILayout.LabelField("File Scope", EditorStyles.boldLabel);
             EditorGUI.indentLevel++;
             EditorGUILayout.PropertyField(m_FilePatterns, true);
             EditorGUILayout.PropertyField(m_IncludePaths, true);
             EditorGUILayout.PropertyField(m_ExcludePaths, true);
             EditorGUI.indentLevel--;
 
-            EditorGUILayout.LabelField("Analysis", EditorStyles.boldLabel);
+            EditorGUILayout.LabelField("Analysis Settings", EditorStyles.boldLabel);
             EditorGUI.indentLevel++;
-            EditorGUILayout.PropertyField(m_InfoLineCount);
+            EditorGUILayout.PropertyField(m_HeaderLineCount, new GUIContent("Header Line Count"));
             EditorGUILayout.PropertyField(m_AuthorRegex);
             EditorGUILayout.PropertyField(m_CreateTimeRegex);
             EditorGUILayout.PropertyField(m_ValidLineRegex);
@@ -63,9 +63,9 @@ namespace EZhex1991.EZEditorTools
                 .ToString(), MessageType.Info);
             EditorGUI.indentLevel--;
 
-            if (GUILayout.Button("Refresh"))
+            if (GUILayout.Button("Generate Statistics"))
             {
-                RefreshResult();
+                GenerateStatistics();
             }
 
             EditorGUILayout.Space();
@@ -88,7 +88,7 @@ namespace EZhex1991.EZEditorTools
             serializedObject.ApplyModifiedProperties();
         }
 
-        public void RefreshResult()
+        public void GenerateStatistics()
         {
             PathNormalize(statistics.includePaths);
             PathNormalize(statistics.excludePaths);
@@ -169,7 +169,7 @@ namespace EZhex1991.EZEditorTools
             info.lineCount = lines.Length;
             for (int i = 0; i < lines.Length; i++)
             {
-                if (i < statistics.infoLineCount)
+                if (i < statistics.headerLineCount)
                 {
                     Match match;
                     match = Regex.Match(lines[i], statistics.authorRegex);

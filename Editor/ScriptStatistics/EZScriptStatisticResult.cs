@@ -18,7 +18,7 @@ namespace EZhex1991.EZEditorTools
             public UnityEngine.Object fileObject;
             public string author;
             public string createTime;
-            public string orgnization;
+            public string organization;
             public int lineCount;
             public int validLineCount;
             public ScriptInfo(string filePath)

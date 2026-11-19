@@ -22,7 +22,7 @@ MonoBehaviour:
   - Assets/EZhex1991
   excludePaths:
   - Assets/EZhex1991/EZUnity/XLuaExtension/Resources/json.lua
-  infoLineCount: 5
+  headerLineCount: 5
   authorRegex: ^\W*Author:\s*(\S[\s\S]*)$
   createTimeRegex: ^\W*CreateTime:\s*(\S[\s\S]*)$
   validLineRegex: ^\W*(\S+)[\S\s]*$

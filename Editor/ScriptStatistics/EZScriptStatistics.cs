@@ -14,7 +14,7 @@ namespace EZhex1991.EZEditorTools
         public string[] includePaths = new string[] { "Assets" };
         public string[] excludePaths = new string[] { "Assets/Plugins" };
 
-        public int infoLineCount = 5;
+        public int headerLineCount = 5;
         public string authorRegex = @"^\W*Author:\s*(\S[\s\S]*)$";
         public string createTimeRegex = @"^\W*CreateTime:\s*(\S[\s\S]*)$";
         public string validLineRegex = @"^\W*(\S+)[\S\s]*$";

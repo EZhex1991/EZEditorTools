@@ -61,11 +61,11 @@ EZEditorTools 是一个独立的 Unity 编辑器工具模块，提供通用的�
 | 创建菜单名称 | 功能 |
 | --- | --- |
 | `Asset List Renamer` | 保存资源列表和重命名规则，并执行批量重命名。 |
-| `Script Statistics` | 用来统计代码量的工具，可以通过正则式来对代码文件进行分类统计，需要预先对代码模板进行设置（参考EZProjectSettings/EZScriptSettings）。通过指定IncludePaths、ExcludePaths和正则式匹配来统计代码。 |
-| `Image Capture` | 保存截图分辨率、纹理格式和输出路径配置，执行 Game View 或 Camera 截图。 |
-| `Bundle Builder` | 保存 AssetBundle 构建配置，并执行 AssetBundle 构建。 |
+| `Script Statistics` | 用来统计代码量的工具，可以通过正则式对指定范围内的代码文件进行分类统计，并生成贡献者和行数统计结果。 |
+| `Image Capture` | 保存截图分辨率、纹理格式和输出目录配置，执行 Game View 或 Camera 截图；Game View 截图需要处于 Play Mode，Camera 截图需要指定 Target Camera。 |
+| `Bundle Builder` | 保存 AssetBundle 构建配置，并执行 AssetBundle 构建，支持 Android、iOS、Win32、Win64、OSX 和 WebGL 快捷构建。 |
 | `Player Builder` | 保存 Player 构建配置，并执行 Player 构建流程。 |
-| `Material Map` | 保存模型材质名称与材质资源的映射，并将映射应用到模型导入器。 |
+| `Material Map` | 保存模型材质名称与材质资源的映射，通过 `Apply Material Map` 将映射应用到模型导入器。 |
 
 自定义资产示例可以通过 **Window > Package Manager > EZEditorTools > Samples** 导入。
 
@@ -73,11 +73,27 @@ EZEditorTools 是一个独立的 Unity 编辑器工具模块，提供通用的�
 
 其中 `Bundle Builder` 示例包含 EZ Bundle 模式和 Manager 模式的配置示例，`Script Statistics` 示例包含代码统计配置示例。
 
-![EZBundleBuilder EZ Mode](Documentation~/Images/EZBundleBuilder_EZMode.png)
+`Material Map` 示例包含模型、材质和测试场景，用于演示将模型材质名称映射到指定材质资源。
 
-![EZBundleBuilder Manager Mode](Documentation~/Images/EZBundleBuilder_ManagerMode.png)
+**Bundle Builder**
 
-![EZScriptStatistics](Documentation~/Images/EZScriptStatistics.png)
+![Bundle Builder](Documentation~/Images/EZBundleBuilder.png)
+
+**Image Capture**
+
+![Image Capture](Documentation~/Images/EZImageCapture.png)
+
+**Player Builder**
+
+![Player Builder](Documentation~/Images/EZPlayerBuilder.png)
+
+**Material Map**
+
+![Material Map](Documentation~/Images/EZMaterialMap.png)
+
+**Script Statistics**
+
+![Script Statistics](Documentation~/Images/EZScriptStatistics.png)
 
 ### 其他编辑器功能
 
@@ -98,6 +114,11 @@ EZEditorTools/                                    — EZEditorTools 模块根目
 │   ├── EZImageCapture.asset                       — Image Capture 配置示例。
 │   ├── EZPlayerBuilder.asset                      — Player Builder 配置示例。
 │   └── EZScriptStatistics.asset                   — Script Statistics 配置示例。
+├── Samples~/Demo/MaterialMap/                     — Material Map 模型、材质和场景示例。
+│   ├── _EZMaterialMap.asset                       — Material Map 配置示例。
+│   ├── _Test.unity                                — Material Map 测试场景。
+│   ├── unitychan.fbx                              — 测试模型。
+│   └── Mat_*.mat                                  — 测试材质。
 └── Editor/                                       — 编辑器脚本和程序集定义目录。
     ├── EZEditorToolsMenuItems.cs                 — EZEditorTools 总菜单入口，注册窗口和通用编辑器操作。
     ├── EZMenuOrder.cs                            — 定义顶部菜单和自定义资产菜单的显示顺序。

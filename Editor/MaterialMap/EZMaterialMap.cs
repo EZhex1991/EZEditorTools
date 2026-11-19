@@ -16,7 +16,7 @@ namespace EZhex1991.EZEditorTools
         )]
     public class EZMaterialMap : EZMapAsset<string, Material>
     {
-        [SerializeField, EZButtonProperty("Set Materials", EZButtonPropertyAttribute.ButtonLayout.Below)]
+        [SerializeField, EZButtonProperty("Apply Material Map", EZButtonPropertyAttribute.ButtonLayout.Below)]
         private GameObject m_TargetModelAsset;
         public GameObject targetModelAssets { get { return m_TargetModelAsset; } }
 

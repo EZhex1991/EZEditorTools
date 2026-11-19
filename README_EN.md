@@ -66,11 +66,11 @@ All windows and features can be accessed from the `EZEditorTools` root menu in t
 | Create menu name | Description |
 | --- | --- |
 | `Asset List Renamer` | Stores asset lists and renaming rules, then performs batch renaming. |
-| `Script Statistics` | Stores script statistics settings and generates line-count and author-contribution reports. |
-| `Image Capture` | Stores capture resolution, texture format, and output path settings for Game View or Camera captures. |
-| `Bundle Builder` | Stores AssetBundle build settings and executes AssetBundle builds. |
+| `Script Statistics` | Analyzes code files within the selected scope using regular expressions and generates contributor and line-count statistics. |
+| `Image Capture` | Stores capture resolution, texture format, and output folder settings for Game View or Camera captures. Game View capture requires Play Mode, while Camera capture requires a Target Camera. |
+| `Bundle Builder` | Stores AssetBundle build settings and supports quick builds for Android, iOS, Win32, Win64, OSX, and WebGL. |
 | `Player Builder` | Stores Player build settings and executes the Player build workflow. |
-| `Material Map` | Stores model material-to-asset mappings and applies them to model importers. |
+| `Material Map` | Stores model material-to-asset mappings and applies them to model importers through `Apply Material Map`. |
 
 The custom asset samples can be imported from **Window > Package Manager > EZEditorTools > Samples**.
 
@@ -78,11 +78,27 @@ The sample assets are located at `Samples~/Demo/CustomAssets`, while the documen
 
 The `Bundle Builder` samples include configurations for EZ Bundle mode and Manager mode. The `Script Statistics` sample includes a script statistics configuration.
 
-![EZBundleBuilder EZ Mode](Documentation~/Images/EZBundleBuilder_EZMode.png)
+The `Material Map` sample includes a model, materials, and a test scene demonstrating how model material names are mapped to specified material assets.
 
-![EZBundleBuilder Manager Mode](Documentation~/Images/EZBundleBuilder_ManagerMode.png)
+**Bundle Builder**
 
-![EZScriptStatistics](Documentation~/Images/EZScriptStatistics.png)
+![Bundle Builder](Documentation~/Images/EZBundleBuilder.png)
+
+**Image Capture**
+
+![Image Capture](Documentation~/Images/EZImageCapture.png)
+
+**Player Builder**
+
+![Player Builder](Documentation~/Images/EZPlayerBuilder.png)
+
+**Material Map**
+
+![Material Map](Documentation~/Images/EZMaterialMap.png)
+
+**Script Statistics**
+
+![Script Statistics](Documentation~/Images/EZScriptStatistics.png)
 
 ## Directory Structure
 
@@ -99,6 +115,11 @@ EZEditorTools/                                    — EZEditorTools package root
 │   ├── EZImageCapture.asset                       — Image Capture configuration sample.
 │   ├── EZPlayerBuilder.asset                      — Player Builder configuration sample.
 │   └── EZScriptStatistics.asset                   — Script Statistics configuration sample.
+├── Samples~/Demo/MaterialMap/                     — Material Map model, material, and scene samples.
+│   ├── _EZMaterialMap.asset                       — Material Map configuration sample.
+│   ├── _Test.unity                                — Material Map test scene.
+│   ├── unitychan.fbx                              — Test model.
+│   └── Mat_*.mat                                  — Test materials.
 └── Editor/                                       — Editor scripts and assembly definition.
     ├── EZEditorToolsMenuItems.cs                 — Root menu entries for EZEditorTools windows and editor operations.
     ├── EZMenuOrder.cs                            — Display order definitions for menus and custom assets.
