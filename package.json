@@ -1,9 +1,16 @@
 {
   "name": "ezhex1991.ezeditortools",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "displayName": "EZEditorTools",
   "description": "Unity editor tools and extensions.",
   "unity": "2020.3",
+  "samples": [
+    {
+      "displayName": "EZEditorTools Demo",
+      "description": "Example custom assets for EZEditorTools.",
+      "path": "Samples~/Demo"
+    }
+  ],
   "author": {
     "name": "EZhex1991",
     "email": "ezhex1991@outlook.com",

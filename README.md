@@ -67,6 +67,18 @@ EZEditorTools 是一个独立的 Unity 编辑器工具模块，提供通用的�
 | `Player Builder` | 保存 Player 构建配置，并执行 Player 构建流程。 |
 | `Material Map` | 保存模型材质名称与材质资源的映射，并将映射应用到模型导入器。 |
 
+自定义资产示例可以通过 **Window > Package Manager > EZEditorTools > Samples** 导入。
+
+示例资产位于 `Samples~/Demo/CustomAssets`，说明和示例图片位于 `Documentation~/Images`。
+
+其中 `Bundle Builder` 示例包含 EZ Bundle 模式和 Manager 模式的配置示例，`Script Statistics` 示例包含代码统计配置示例。
+
+![EZBundleBuilder EZ Mode](Documentation~/Images/EZBundleBuilder_EZMode.png)
+
+![EZBundleBuilder Manager Mode](Documentation~/Images/EZBundleBuilder_ManagerMode.png)
+
+![EZScriptStatistics](Documentation~/Images/EZScriptStatistics.png)
+
 ### 其他编辑器功能
 
 - `Transform Context Menu`：为 Transform Inspector 提供重置和对齐相关的右键菜单功能。
@@ -80,6 +92,12 @@ EZEditorTools/                                    — EZEditorTools 模块根目
 ├── package.json                                  — Unity Package Manager 包元数据。
 ├── README.md                                     — 中文模块说明文档。
 ├── README_EN.md                                  — 英文模块说明文档。
+├── Documentation~/Images/                         — README 使用的示例图片。
+├── Samples~/Demo/CustomAssets/                    — 自定义资产示例。
+│   ├── EZBundleBuilder.asset                      — Bundle Builder 配置示例。
+│   ├── EZImageCapture.asset                       — Image Capture 配置示例。
+│   ├── EZPlayerBuilder.asset                      — Player Builder 配置示例。
+│   └── EZScriptStatistics.asset                   — Script Statistics 配置示例。
 └── Editor/                                       — 编辑器脚本和程序集定义目录。
     ├── EZEditorToolsMenuItems.cs                 — EZEditorTools 总菜单入口，注册窗口和通用编辑器操作。
     ├── EZMenuOrder.cs                            — 定义顶部菜单和自定义资产菜单的显示顺序。

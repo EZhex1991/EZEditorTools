@@ -72,6 +72,18 @@ All windows and features can be accessed from the `EZEditorTools` root menu in t
 | `Player Builder` | Stores Player build settings and executes the Player build workflow. |
 | `Material Map` | Stores model material-to-asset mappings and applies them to model importers. |
 
+The custom asset samples can be imported from **Window > Package Manager > EZEditorTools > Samples**.
+
+The sample assets are located at `Samples~/Demo/CustomAssets`, while the documentation and sample images are located at `Documentation~/Images`.
+
+The `Bundle Builder` samples include configurations for EZ Bundle mode and Manager mode. The `Script Statistics` sample includes a script statistics configuration.
+
+![EZBundleBuilder EZ Mode](Documentation~/Images/EZBundleBuilder_EZMode.png)
+
+![EZBundleBuilder Manager Mode](Documentation~/Images/EZBundleBuilder_ManagerMode.png)
+
+![EZScriptStatistics](Documentation~/Images/EZScriptStatistics.png)
+
 ## Directory Structure
 
 The following tree lists the directories, scripts, and assembly definition in this package. Unity-generated `.meta` files are omitted for readability.
@@ -81,6 +93,12 @@ EZEditorTools/                                    — EZEditorTools package root
 ├── package.json                                  — Unity Package Manager metadata.
 ├── README.md                                     — Chinese package documentation.
 ├── README_EN.md                                  — English package documentation.
+├── Documentation~/Images/                         — Sample images used by the documentation.
+├── Samples~/Demo/CustomAssets/                    — Custom asset samples.
+│   ├── EZBundleBuilder.asset                      — Bundle Builder configuration sample.
+│   ├── EZImageCapture.asset                       — Image Capture configuration sample.
+│   ├── EZPlayerBuilder.asset                      — Player Builder configuration sample.
+│   └── EZScriptStatistics.asset                   — Script Statistics configuration sample.
 └── Editor/                                       — Editor scripts and assembly definition.
     ├── EZEditorToolsMenuItems.cs                 — Root menu entries for EZEditorTools windows and editor operations.
     ├── EZMenuOrder.cs                            — Display order definitions for menus and custom assets.

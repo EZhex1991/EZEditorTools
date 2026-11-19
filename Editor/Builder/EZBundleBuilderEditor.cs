@@ -96,29 +96,31 @@ namespace EZhex1991.EZEditorTools.Build
 
         private void DrawQuickBuildButtons()
         {
-            if (GUILayout.Button("Android"))
+            EditorGUILayout.LabelField("Quick Build", EditorStyles.boldLabel);
+            DrawQuickBuildButtonRow(
+                new string[] { "Android", "iOS" },
+                new BuildTarget[] { BuildTarget.Android, BuildTarget.iOS });
+            DrawQuickBuildButtonRow(
+                new string[] { "Win32", "Win64", "OSX" },
+                new BuildTarget[] { BuildTarget.StandaloneWindows, BuildTarget.StandaloneWindows64, BuildTarget.StandaloneOSX });
+            DrawQuickBuildButtonRow(
+                new string[] { "WebGL" },
+                new BuildTarget[] { BuildTarget.WebGL });
+        }
+
+        private void DrawQuickBuildButtonRow(string[] labels, BuildTarget[] buildTargets)
+        {
+            Rect rowRect = EditorGUILayout.GetControlRect(false, EditorGUIUtility.singleLineHeight);
+            const float buttonSpacing = 2f;
+            float buttonWidth = (rowRect.width - buttonSpacing * (labels.Length - 1)) / labels.Length;
+            for (int i = 0; i < labels.Length; i++)
             {
-                EditorApplication.delayCall += delegate () { bundleBuilder.Execute(BuildTarget.Android); };
-            }
-            if (GUILayout.Button("iOS"))
-            {
-                EditorApplication.delayCall += delegate () { bundleBuilder.Execute(BuildTarget.iOS); };
-            }
-            {
-                EditorGUILayout.BeginHorizontal();
-                if (GUILayout.Button("Windows"))
+                int index = i;
+                Rect buttonRect = new Rect(rowRect.x + (buttonWidth + buttonSpacing) * i, rowRect.y, buttonWidth, rowRect.height);
+                if (GUI.Button(buttonRect, labels[i]))
                 {
-                    EditorApplication.delayCall += delegate () { bundleBuilder.Execute(BuildTarget.StandaloneWindows); };
+                    EditorApplication.delayCall += delegate () { bundleBuilder.Execute(buildTargets[index]); };
                 }
-                if (GUILayout.Button("Windows64"))
-                {
-                    EditorApplication.delayCall += delegate () { bundleBuilder.Execute(BuildTarget.StandaloneWindows64); };
-                }
-                EditorGUILayout.EndHorizontal();
-            }
-            if (GUILayout.Button("OSX"))
-            {
-                EditorApplication.delayCall += delegate () { bundleBuilder.Execute(BuildTarget.StandaloneOSX); };
             }
         }
 

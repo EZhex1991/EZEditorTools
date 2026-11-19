@@ -75,19 +75,15 @@ namespace EZhex1991.EZEditorTools.Build
             {
                 EditorGUILayout.LabelField("Build", EditorStyles.boldLabel);
 
-                EditorGUILayout.BeginHorizontal();
                 EditorGUILayout.PropertyField(m_BuildTarget);
-                if (GUILayout.Button("Config"))
-                {
-                    playerBuilder.ConfigPlayerSettings((BuildTarget)m_BuildTarget.intValue);
-                }
-                EditorGUILayout.EndHorizontal();
 
                 if (GUILayout.Button("Build"))
                 {
                     playerBuilder.BuildPlayer();
                     GUIUtility.ExitGUI();
                 }
+                EditorGUILayout.Space();
+                DrawQuickBuildButtons();
                 EditorGUILayout.Space();
             }
 
@@ -99,6 +95,44 @@ namespace EZhex1991.EZEditorTools.Build
 
             serializedObject.ApplyModifiedProperties();
         }
+        private void DrawQuickBuildButtons()
+        {
+            EditorGUILayout.LabelField("Quick Build", EditorStyles.boldLabel);
+            DrawQuickBuildButtonRow(
+                new string[] { "Android", "iOS" },
+                new BuildTarget[] { BuildTarget.Android, BuildTarget.iOS });
+            DrawQuickBuildButtonRow(
+                new string[] { "Win32", "Win64", "OSX" },
+                new BuildTarget[] { BuildTarget.StandaloneWindows, BuildTarget.StandaloneWindows64, BuildTarget.StandaloneOSX });
+            DrawQuickBuildButtonRow(
+                new string[] { "WebGL" },
+                new BuildTarget[] { BuildTarget.WebGL });
+        }
+
+        private void DrawQuickBuildButtonRow(string[] labels, BuildTarget[] buildTargets)
+        {
+            Rect rowRect = EditorGUILayout.GetControlRect(false, EditorGUIUtility.singleLineHeight);
+            const float buttonSpacing = 2f;
+            float buttonWidth = (rowRect.width - buttonSpacing * (labels.Length - 1)) / labels.Length;
+            for (int i = 0; i < labels.Length; i++)
+            {
+                int index = i;
+                Rect buttonRect = new Rect(rowRect.x + (buttonWidth + buttonSpacing) * i, rowRect.y, buttonWidth, rowRect.height);
+                if (GUI.Button(buttonRect, labels[i]))
+                {
+                    QuickBuild(buildTargets[index]);
+                }
+            }
+        }
+
+        private void QuickBuild(BuildTarget buildTarget)
+        {
+            m_BuildTarget.intValue = (int)buildTarget;
+            serializedObject.ApplyModifiedProperties();
+            playerBuilder.BuildPlayer();
+            GUIUtility.ExitGUI();
+        }
+
         private void BuildOptionsGUI()
         {
             EditorGUILayout.LabelField("Build Options", EditorStyles.boldLabel);
@@ -149,6 +183,10 @@ namespace EZhex1991.EZEditorTools.Build
             EditorGUILayout.HelpBox(bundleVersion, MessageType.Info);
 
             EditorGUILayout.PropertyField(m_Icon);
+            if (GUILayout.Button("Apply Player Settings"))
+            {
+                playerBuilder.ConfigPlayerSettings((BuildTarget)m_BuildTarget.intValue);
+            }
         }
     }
 }
