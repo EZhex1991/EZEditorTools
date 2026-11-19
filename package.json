@@ -1,0 +1,12 @@
+{
+  "name": "ezhex1991.ezeditortools",
+  "version": "1.0.0",
+  "displayName": "EZEditorTools",
+  "description": "Unity editor tools and extensions.",
+  "unity": "2020.3",
+  "author": {
+    "name": "EZhex1991",
+    "email": "ezhex1991@outlook.com",
+    "url": "https://github.com/EZhex1991/EZEditorTools"
+  }
+}
