@@ -7,45 +7,69 @@ EZEditorTools 是一个独立的 Unity 编辑器工具模块，提供通用的�
 
 最低支持 Unity 版本：`2020.3.x`。
 
-## 窗口和功能说明
+## 自定义窗口和功能说明
 
-所有窗口均可从 Unity 编辑器的 `EZEditorTools` 根菜单访问。
+所有窗口和功能均从 Unity 编辑器的 `EZEditorTools` 根菜单访问。以下分组与 `EZMenuOrder` 中的 Section 保持一致。
 
-| 窗口 | 功能 |
+### 项目和编辑器操作
+
+| 菜单名称 | 说明 |
 | --- | --- |
-| `EZRenamerWindow` | 批量重命名选中的资源或对象。 |
-| `EZGuidGenerator` | 生成系统 GUID 和 Unity GUID。 |
-| `EZRegexTester` | 测试正则表达式，并显示匹配项、分组和捕获结果。 |
-| `EZColorBlender` | 预览常见的颜色混合运算结果。 |
-| `EZPlayerPrefsEditor` | 查看、修改和删除 PlayerPrefs 数据。 |
-| `EZTimePanel` | 查看和解析当前时间及其各类格式化结果。 |
-| `EZShaderKeywordManager` | 查看和管理材质及 Shader 的关键字状态。 |
-| `EZMaterialOptimizer` | 批量优化选中材质的属性，并复制材质属性。 |
-| `EZImageCapture` | 配置并执行 Game View 或目标 Camera 的截图。 |
-| `EZPropertyPathViewer` | 查看对象的序列化属性和属性路径。 |
-| `EZAssetReferenceViewer` | 查看资源依赖关系和场景引用。 |
-| `EZFontReferenceViewer` | 查找引用指定字体的 UI 文本组件。 |
-| `EZCorrespondingObjectViewer` | 查看对象及其对应的源对象和资源。 |
-| `EZHierachyDiffChecker` | 对比两个 Transform 层级结构的差异。 |
-| `EZTypeReflectionHelper` | 通过反射查看类型的字段、属性、方法和枚举值。 |
-| `EZAnimatorControllerCombiner` | 通过编辑器窗口合并 Animator Controller 数据。 |
-| `EZBundleManager` | 查看和管理 AssetBundle 构建结果及相关资源。 |
-| `EZTransformContextMenu` | 为 Transform Inspector 提供重置和对齐相关的右键菜单。 |
-| `Save Assets` | 保存当前项目资源。 |
+| `Save Assets` | Editor 下序列化资源文件的修改不会立即写入磁盘，使用该菜单可以强制保存资源文件。 |
 | `Refresh AssetDatabase` | 刷新 Unity AssetDatabase。 |
 | `Open Persistent Folder` | 打开 Unity 的持久化数据目录。 |
 | `Clear Persistent Folder` | 清空 Unity 的持久化数据目录。 |
+| `PlayerPrefs Editor` | 查看、修改和删除 PlayerPrefs 数据，目前仅支持 Windows。 |
+
+### 资源处理
+
+| 菜单名称 | 功能 |
+| --- | --- |
+| `Renamer` | 批量重命名工具窗口，支持正则式匹配，整理资源目录很方便。 |
+| `Material Optimizer` | 查看和删除材质中的 Keywords 和多余的 Properties，也可以迁移旧的 Property。 |
+
+### 资源关系和构建
+
+| 菜单名称 | 功能 |
+| --- | --- |
+| `Asset Reference Viewer` | 查看资源依赖关系和场景引用。 |
+| `Corresponding Object Viewer` | 查看对象及其对应的源对象和资源。 |
+| `Font Reference Viewer` | 查找引用指定字体的 UI 文本组件。 |
+| `Hierarchy Diff Checker` | 对比两个 Transform 层级结构的差异。 |
+| `Property Path Viewer` | 查看对象的序列化属性和属性路径。 |
+| `Asset Bundle Manager` | 查看和管理基于资源标签的 AssetBundle 构建结果及相关资源。 |
+
+### 调试和辅助工具
+
+| 菜单名称 | 功能 |
+| --- | --- |
+| `Guid Generator` | 生成系统 GUID 和 Unity GUID。 |
+| `Regex Tester` | 测试正则表达式，并显示匹配项、分组和捕获结果。 |
+| `Color Blender` | 预览常见的颜色混合运算结果。 |
+| `Time Panel` | 查看和解析当前时间及其各类格式化结果。 |
+| `Type Reflection Helper` | 通过反射查看类型的字段、属性、方法和枚举值，也可以通过成员名称推断不可直接访问的类型信息。 |
+
+### 实验性功能
+
+| 菜单名称 | 功能 |
+| --- | --- |
+| `Shader Keyword Manager` | 查看和管理材质及 Shader 的关键字状态。 |
+| `Animator Controller Combiner` | 通过编辑器窗口合并 Animator Controller 数据。 |
 
 ## 自定义资产和功能说明
 
-| 自定义资产 | 功能 |
+| 创建菜单名称 | 功能 |
 | --- | --- |
-| `EZAssetListRenamer` | 保存资源列表和重命名规则，并执行批量重命名。 |
-| `EZScriptStatistics` | 保存脚本统计配置，并生成脚本行数和作者贡献统计结果。 |
-| `EZImageCapture` | 保存截图分辨率、纹理格式和输出路径配置，执行 Game View 或 Camera 截图。 |
-| `EZBundleBuilder` | 保存 AssetBundle 构建配置，并执行 AssetBundle 构建。 |
-| `EZPlayerBuilder` | 保存 Player 构建配置，并执行 Player 构建流程。 |
-| `EZMaterialMap` | 保存模型材质名称与材质资源的映射，并将映射应用到模型导入器。 |
+| `Asset List Renamer` | 保存资源列表和重命名规则，并执行批量重命名。 |
+| `Script Statistics` | 用来统计代码量的工具，可以通过正则式来对代码文件进行分类统计，需要预先对代码模板进行设置（参考EZProjectSettings/EZScriptSettings）。通过指定IncludePaths、ExcludePaths和正则式匹配来统计代码。 |
+| `Image Capture` | 保存截图分辨率、纹理格式和输出路径配置，执行 Game View 或 Camera 截图。 |
+| `Bundle Builder` | 保存 AssetBundle 构建配置，并执行 AssetBundle 构建。 |
+| `Player Builder` | 保存 Player 构建配置，并执行 Player 构建流程。 |
+| `Material Map` | 保存模型材质名称与材质资源的映射，并将映射应用到模型导入器。 |
+
+### 其他编辑器功能
+
+- `Transform Context Menu`：为 Transform Inspector 提供重置和对齐相关的右键菜单功能。
 
 ## 目录结构和脚本说明
 
@@ -67,10 +91,10 @@ EZEditorTools/                                    — EZEditorTools 模块根目
     │   ├── EZEditorGUIUtility.cs                 — 提供通用编辑器 GUI 绘制辅助方法。
     │   ├── EZEditorUtility.cs                    — 提供编辑器资源、类型和着色器查询辅助方法。
     │   ├── EZGameViewUtility.cs                  — 访问 Unity Game View，并读取或修改当前目标 Display。
-    │   ├── MaterialExt.cs                         — 提供材质关键字设置、禁用和查询的扩展方法。
+    │   ├── MaterialExt.cs                        — 提供材质关键字设置、禁用和查询的扩展方法。
     │   ├── EZShaderGUIUtility.cs                 — 提供材质 Shader 属性、关键字和额外属性的绘制及优化方法。
     │   └── TransformExt.cs                       — 提供 Transform 扩展方法，包括层级 Transform 的 TRS 复制。
-    ├── General/                                  — 存放一般用途的独立编辑器窗口。
+    ├── General/                                  — 存放一般用途的编辑器窗口和功能。
     │   ├── EZAnimatorControllerCombiner.cs       — 合并 Animator Controller 数据的窗口。
     │   ├── EZAssetReferenceViewer.cs             — 查看资源依赖关系和场景引用的窗口。
     │   ├── EZColorBlender.cs                     — 预览颜色混合运算结果的窗口。

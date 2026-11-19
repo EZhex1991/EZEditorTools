@@ -8,45 +8,69 @@ The code is defined in the `EZhex1991.EZEditorTools.Editor` assembly and targets
 
 Minimum supported Unity version: `2020.3.x`.
 
-## Windows and Features
+## Custom Windows and Features
 
-All windows can be accessed from the `EZEditorTools` root menu in the Unity Editor.
+All windows and features can be accessed from the `EZEditorTools` root menu in the Unity Editor. The following groups match the Sections in `EZMenuOrder`.
 
-| Window | Description |
+### Project and editor operations
+
+| Menu name | Description |
 | --- | --- |
-| `EZRenamerWindow` | Batch-renames selected assets or objects. |
-| `EZGuidGenerator` | Generates system GUIDs and Unity GUIDs. |
-| `EZRegexTester` | Tests regular expressions and displays matches, groups, and captures. |
-| `EZColorBlender` | Previews common color blending operations. |
-| `EZPlayerPrefsEditor` | Views, edits, and deletes PlayerPrefs data. |
-| `EZTimePanel` | Views and parses current time information in multiple formats. |
-| `EZShaderKeywordManager` | Views and manages material and Shader keyword states. |
-| `EZMaterialOptimizer` | Batch-optimizes selected material properties and copies material properties. |
-| `EZImageCapture` | Configures and captures the Game View or a target Camera. |
-| `EZPropertyPathViewer` | Views serialized properties and property paths. |
-| `EZAssetReferenceViewer` | Views asset dependencies and scene references. |
-| `EZFontReferenceViewer` | Finds UI text components that reference a specified font. |
-| `EZCorrespondingObjectViewer` | Views objects and their corresponding source objects and assets. |
-| `EZHierachyDiffChecker` | Compares differences between two Transform hierarchies. |
-| `EZTypeReflectionHelper` | Views fields, properties, methods, and enum values through reflection. |
-| `EZAnimatorControllerCombiner` | Combines Animator Controller data through an editor window. |
-| `EZBundleManager` | Views and manages AssetBundle build results and related assets. |
-| `EZTransformContextMenu` | Provides Transform Inspector context menu operations for resetting and aligning transforms. |
-| `Save Assets` | Saves the current project assets. |
+| `Save Assets` | Forces serialized asset changes made in the Editor to be written to disk. |
 | `Refresh AssetDatabase` | Refreshes the Unity AssetDatabase. |
 | `Open Persistent Folder` | Opens Unity's persistent data directory. |
 | `Clear Persistent Folder` | Clears Unity's persistent data directory. |
+| `PlayerPrefs Editor` | Views, edits, and deletes PlayerPrefs data. Currently supported on Windows only. |
+
+### Asset operations
+
+| Menu name | Description |
+| --- | --- |
+| `Renamer` | Batch-renames assets with regular-expression matching, useful for organizing asset directories. |
+| `Material Optimizer` | Views and removes material keywords and redundant properties, and can migrate legacy properties. |
+
+### Asset relationships and build results
+
+| Menu name | Description |
+| --- | --- |
+| `Asset Reference Viewer` | Views asset dependencies and scene references. |
+| `Corresponding Object Viewer` | Views objects and their corresponding source objects and assets. |
+| `Font Reference Viewer` | Finds UI text components that reference a specified font. |
+| `Hierarchy Diff Checker` | Compares differences between two Transform hierarchies. |
+| `Property Path Viewer` | Views serialized properties and property paths. |
+| `Asset Bundle Manager` | Views and manages AssetBundle build results and related assets based on asset labels. |
+
+### Debugging and utility tools
+
+| Menu name | Description |
+| --- | --- |
+| `Guid Generator` | Generates system GUIDs and Unity GUIDs. |
+| `Regex Tester` | Tests regular expressions and displays matches, groups, and captures. |
+| `Color Blender` | Previews common color blending operations. |
+| `Time Panel` | Views and parses current time information in multiple formats. |
+| `Type Reflection Helper` | Uses reflection to view fields, properties, methods, and enum values, and infer information about otherwise inaccessible types from their member names. |
+
+### Experimental features
+
+| Menu name | Description |
+| --- | --- |
+| `Shader Keyword Manager` | Views and manages material and Shader keyword states. |
+| `Animator Controller Combiner` | Combines Animator Controller data through an editor window. |
+
+### Other editor features
+
+- `Transform Context Menu`: Provides Transform Inspector context menu operations for resetting and aligning transforms.
 
 ## Custom Assets and Features
 
-| Custom Asset | Description |
+| Create menu name | Description |
 | --- | --- |
-| `EZAssetListRenamer` | Stores asset lists and renaming rules, then performs batch renaming. |
-| `EZScriptStatistics` | Stores script statistics settings and generates line-count and author-contribution reports. |
-| `EZImageCapture` | Stores capture resolution, texture format, and output path settings for Game View or Camera captures. |
-| `EZBundleBuilder` | Stores AssetBundle build settings and executes AssetBundle builds. |
-| `EZPlayerBuilder` | Stores Player build settings and executes the Player build workflow. |
-| `EZMaterialMap` | Stores model material-to-asset mappings and applies them to model importers. |
+| `Asset List Renamer` | Stores asset lists and renaming rules, then performs batch renaming. |
+| `Script Statistics` | Stores script statistics settings and generates line-count and author-contribution reports. |
+| `Image Capture` | Stores capture resolution, texture format, and output path settings for Game View or Camera captures. |
+| `Bundle Builder` | Stores AssetBundle build settings and executes AssetBundle builds. |
+| `Player Builder` | Stores Player build settings and executes the Player build workflow. |
+| `Material Map` | Stores model material-to-asset mappings and applies them to model importers. |
 
 ## Directory Structure
 
