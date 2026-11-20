@@ -133,14 +133,14 @@ namespace EZhex1991.EZEditorTools
 
         private void RenameAssets()
         {
-            EditorUtility.DisplayProgressBar("Processing", "", 0);
+            EditorUtility.DisplayProgressBar(EZLocalization.Get<EZRenamerWindow>("Processing"), "", 0);
             int process = 0;
             foreach (Object obj in assetList)
             {
                 string oldValue = obj.name;
                 string newValue = GetNewName(oldValue);
                 if (showLog) Debug.LogFormat("rename -> \t{0}\nto -> \t{1}", oldValue, newValue);
-                EditorUtility.DisplayProgressBar("Processing", oldValue, process++ / assetList.Count);
+                EditorUtility.DisplayProgressBar(EZLocalization.Get<EZRenamerWindow>("Processing"), oldValue, process++ / assetList.Count);
                 string error = AssetDatabase.RenameAsset(AssetDatabase.GetAssetPath(obj), newValue);
                 if (error != string.Empty)
                 {
@@ -151,14 +151,14 @@ namespace EZhex1991.EZEditorTools
         }
         private void RenameSceneObjects()
         {
-            EditorUtility.DisplayProgressBar("Processing", "", 0);
+            EditorUtility.DisplayProgressBar(EZLocalization.Get<EZRenamerWindow>("Processing"), "", 0);
             int process = 0;
             foreach (Object obj in sceneObjectList)
             {
                 string oldValue = obj.name;
                 string newValue = GetNewName(oldValue);
                 if (showLog) Debug.LogFormat("rename -> \t{0}\nto -> \t{1}", oldValue, newValue);
-                EditorUtility.DisplayProgressBar("Processing", oldValue, process++ / sceneObjectList.Count);
+                EditorUtility.DisplayProgressBar(EZLocalization.Get<EZRenamerWindow>("Processing"), oldValue, process++ / sceneObjectList.Count);
                 // set name won't mark the scene as dirty
                 // obj.name = newValue;
                 SerializedObject so = new SerializedObject(obj);
@@ -183,7 +183,7 @@ namespace EZhex1991.EZEditorTools
             EZEditorGUIUtility.WindowTitle(this);
 
             EditorGUILayout.Space();
-            if (GUILayout.Button("Reset"))
+            if (GUILayout.Button(EZLocalization.Get<EZRenamerWindow>("Reset")))
             {
                 assetList.Clear();
                 sceneObjectList.Clear();
@@ -194,24 +194,24 @@ namespace EZhex1991.EZEditorTools
             scrollView = EditorGUILayout.BeginScrollView(scrollView);
 
             EditorGUILayout.Space();
-            if (GUILayout.Button("Rename Assets"))
+            if (GUILayout.Button(EZLocalization.Get<EZRenamerWindow>("RenameAssets")))
             {
                 RenameAssets();
                 ResetConfigs();
             }
-            if (assetListFoldOut = EditorGUILayout.Foldout(assetListFoldOut, "Asset List " + assetNameList.Count.ToString("(00)")))
+            if (assetListFoldOut = EditorGUILayout.Foldout(assetListFoldOut, string.Format(EZLocalization.Get<EZRenamerWindow>("AssetList"), assetNameList.Count.ToString("(00)"))))
             {
                 if (collapse) DrawNameDict(assetNameDict);
                 else DrawNameList(assetNameList);
             }
 
             EditorGUILayout.Space();
-            if (GUILayout.Button("Rename Scene Objects"))
+            if (GUILayout.Button(EZLocalization.Get<EZRenamerWindow>("RenameSceneObjects")))
             {
                 RenameSceneObjects();
                 ResetConfigs();
             }
-            if (sceneObjectListFoldOut = EditorGUILayout.Foldout(sceneObjectListFoldOut, "Scene Object List " + sceneObjectNameList.Count.ToString("(00)")))
+            if (sceneObjectListFoldOut = EditorGUILayout.Foldout(sceneObjectListFoldOut, string.Format(EZLocalization.Get<EZRenamerWindow>("SceneObjectList"), sceneObjectNameList.Count.ToString("(00)"))))
             {
                 if (collapse) DrawNameDict(sceneObjectNameDict);
                 else DrawNameList(sceneObjectNameList);
@@ -222,24 +222,28 @@ namespace EZhex1991.EZEditorTools
 
         private void DrawConfig()
         {
-            caseConversion = (CaseConversion)EditorGUILayout.EnumPopup("Case Conversion", caseConversion);
-            useRegex = EditorGUILayout.Toggle("Use Regex", useRegex);
+            string[] caseOptions = EZLocalization.GetOptions<EZRenamerWindow>("Case.None", "Case.ToUpper", "Case.ToLower");
+            caseConversion = (CaseConversion)EditorGUILayout.Popup(
+                EZLocalization.Get<EZRenamerWindow>("CaseConversion"),
+                (int)caseConversion,
+                caseOptions);
+            useRegex = EditorGUILayout.Toggle(EZLocalization.Get<EZRenamerWindow>("UseRegex"), useRegex);
             {
                 EditorGUILayout.BeginHorizontal();
-                oldValue = EditorGUILayout.TextField("Replace", oldValue);
-                newValue = EditorGUILayout.TextField("To", newValue);
+                oldValue = EditorGUILayout.TextField(EZLocalization.Get<EZRenamerWindow>("Replace"), oldValue);
+                newValue = EditorGUILayout.TextField(EZLocalization.Get<EZRenamerWindow>("To"), newValue);
                 EditorGUILayout.EndHorizontal();
             }
             {
                 EditorGUILayout.BeginHorizontal();
-                prefix = EditorGUILayout.TextField("Prefix", prefix);
-                suffix = EditorGUILayout.TextField("Suffix", suffix);
+                prefix = EditorGUILayout.TextField(EZLocalization.Get<EZRenamerWindow>("Prefix"), prefix);
+                suffix = EditorGUILayout.TextField(EZLocalization.Get<EZRenamerWindow>("Suffix"), suffix);
                 EditorGUILayout.EndHorizontal();
             }
             {
                 EditorGUILayout.BeginHorizontal();
-                showLog = EditorGUILayout.Toggle("Show Log", showLog);
-                collapse = EditorGUILayout.Toggle("Collapse", collapse);
+                showLog = EditorGUILayout.Toggle(EZLocalization.Get<EZRenamerWindow>("ShowLog"), showLog);
+                collapse = EditorGUILayout.Toggle(EZLocalization.Get<EZRenamerWindow>("Collapse"), collapse);
                 EditorGUILayout.EndHorizontal();
             }
         }

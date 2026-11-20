@@ -1,14 +1,17 @@
 # Changelog
 
-## [1.0.2] - 2026-11-19
+## [1.0.3] - 2026-11-20
 
 ### Added
 
-- Added lightweight editor localization with System, Chinese, and English language options.
-- Moved localization text to editable JSON language files.
+- Added lightweight editor localization with Chinese and English language options.
+- Moved localization text back into `EZLocalization.cs` for the bilingual implementation.
 - Added the `EditorPrefs Editor` window for viewing, editing, and deleting EditorPrefs data on Windows.
-- Added the `Hierarchy Active Toggle` menu for enabling or disabling Hierarchy Active toggles.
+- Added the `Scene Object Active Toggle` menu for enabling or disabling GameObject Active toggles in the Hierarchy.
 - Added editor-local persistence for Image Canvas Tool preferences, Asset Reference Viewer recursion, and Material Optimizer property names.
+- Grouped localization entries by editor window class names in `EZLocalization.cs`.
+- Added Chinese localization support for the `Renamer` window.
+- Removed the System language option; English is now the default language.
 - Added the `Image Canvas Tool` editor window for checking image resolutions in a selected folder.
 - Added an image Inspector button for expanding the current image canvas to a multiple of 4.
 - Added three image collection scopes to the `Image Canvas Tool`.

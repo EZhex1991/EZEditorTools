@@ -23,7 +23,7 @@ namespace EZhex1991.EZEditorTools
 
             bool guiEnabled = GUI.enabled;
             GUI.enabled = guiEnabled && EZImageCanvasTool.CanProcessTextureAsset(texture);
-            if (GUILayout.Button(EZLocalization.Get("ImageCanvasTool.InspectorProcess")))
+            if (GUILayout.Button(EZLocalization.Get<EZImageCanvasTool>("InspectorProcess")))
             {
                 EZImageCanvasTool.ProcessTextureAsset(texture);
             }

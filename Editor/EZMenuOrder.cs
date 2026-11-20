@@ -9,9 +9,8 @@ namespace EZhex1991.EZEditorTools
     {
         _____SECTION_0_____ = 10000,
         Language,
-        LanguageSystem,
-        LanguageEnglish,
         LanguageChinese,
+        LanguageEnglish,
 
         _____SECTION_1_____ = _____SECTION_0_____ + 100,
         HierarchyActiveToggle,
@@ -26,8 +25,8 @@ namespace EZhex1991.EZEditorTools
 
         _____SECTION_3_____ = _____SECTION_0_____ + 300,
         Renamer,
-        ImageCanvasTool,
         MaterialOptimizer,
+        ImageCanvasTool,
 
         _____SECTION_4_____ = _____SECTION_0_____ + 400,
         AssetReferenceViewer,
@@ -43,10 +42,10 @@ namespace EZhex1991.EZEditorTools
 
         _____SECTION_7_____ = _____SECTION_0_____ + 700,
         GuidGenerator,
-        RegexTester,
         ColorBlender,
         TimePanel,
         TypeReflectionHelper,
+        RegexTester,
 
         _____SECTION_8_____ = _____SECTION_0_____ + 800,
 

@@ -12,17 +12,22 @@ Minimum supported Unity version: `2020.3.x`.
 
 All windows and features can be accessed from the `EZEditorTools` root menu in the Unity Editor. The following groups match the Sections in `EZMenuOrder`.
 
-The language can be switched between System, 简体中文, and English from `EZEditorTools/Language`. The selected language is saved locally in the editor and only affects localized window UI; menu names are not changed.
+The language can be switched between 简体中文 and English from `EZEditorTools/Language`. English is used by default. The selected language is saved locally in the editor and only affects localized window UI; menu names are not changed.
+
+### Scene Object Active Toggle
+
+| Menu name | Description |
+| --- | --- |
+| `场景对象快捷开关丨Scene Object Active Toggle` | Uses an editor-local preference to control whether GameObject Active toggles are shown in the Hierarchy. |
 
 ### Project and editor operations
 
 | Menu name | Description |
 | --- | --- |
-| `Save Assets` | Forces serialized asset changes made in the Editor to be written to disk. |
-| `Refresh AssetDatabase` | Refreshes the Unity AssetDatabase. |
-| `Open Persistent Folder` | Opens Unity's persistent data directory. |
-| `Clear Persistent Folder` | Clears Unity's persistent data directory. |
-| `Hierarchy Active Toggle` | Uses an editor-local preference to control whether GameObject Active toggles are shown in the Hierarchy. |
+| `保存资产修改丨Save Assets` | Forces serialized asset changes made in the Editor to be written to disk. |
+| `刷新资产目录丨Refresh AssetDatabase` | Refreshes the Unity AssetDatabase. |
+| `打开持久化目录丨Open Persistent Folder` | Opens Unity's persistent data directory. |
+| `清空持久化目录丨Clear Persistent Folder` | Clears Unity's persistent data directory. |
 | `PlayerPrefs Editor` | Views, edits, and deletes PlayerPrefs data. Currently supported on Windows only. |
 | `EditorPrefs Editor` | Views, edits, and deletes EditorPrefs data. Currently supported on Windows only. |
 
@@ -30,38 +35,37 @@ The language can be switched between System, 简体中文, and English from `EZE
 
 | Menu name | Description |
 | --- | --- |
-| `Renamer` | Batch-renames assets with regular-expression matching, useful for organizing asset directories. |
-| `Image Canvas Tool` | Checks image resolutions and expands canvases that do not meet the multiple-of-4 requirement. |
-| `Material Optimizer` | Views and removes material keywords and redundant properties, and can migrate legacy properties. |
+| `批量重命名丨Renamer` | Batch-renames assets with regular-expression matching, useful for organizing asset directories. |
+| `图片画布工具丨Image Canvas Tool` | Checks image resolutions and expands canvases that do not meet the multiple-of-4 requirement. |
+| `材质优化器丨Material Optimizer` | Views and removes material keywords and redundant properties, and can migrate legacy properties. |
 
 ### Asset relationships and build results
 
 | Menu name | Description |
 | --- | --- |
-| `Asset Reference Viewer` | Views asset dependencies and scene references. |
-| `Corresponding Object Viewer` | Views objects and their corresponding source objects and assets. |
-| `Font Reference Viewer` | Finds UI text components that reference a specified font. |
-| `Hierarchy Diff Checker` | Compares differences between two Transform hierarchies. |
-| `Property Path Viewer` | Views serialized properties and property paths. |
-| `Asset Bundle Manager` | Views and manages AssetBundle build results and related assets based on asset labels. |
+| `资源引用查看器丨Asset Reference Viewer` | Views asset dependencies and scene references. |
+| `对应物体查看器丨Corresponding Object Viewer` | Views objects and their corresponding source objects and assets. |
+| `字体引用查看器丨Font Reference Viewer` | Finds UI text components that reference a specified font. |
+| `层级差异检查器丨Hierarchy Diff Checker` | Compares differences between two Transform hierarchies. |
+| `属性路径查看器丨Property Path Viewer` | Views serialized properties and property paths. |
+| `Bundle包管理丨Asset Bundle Manager` | Views and manages AssetBundle build results and related assets based on asset labels. |
 
 ### Debugging and utility tools
 
 | Menu name | Description |
 | --- | --- |
-| `Guid Generator` | Generates system GUIDs and Unity GUIDs. |
-| `Regex Tester` | Tests regular expressions and displays matches, groups, and captures. |
-| `Color Blender` | Previews common color blending operations. |
-| `Time Panel` | Views and parses current time information in multiple formats. |
-| `Type Reflection Helper` | Uses reflection to view fields, properties, methods, and enum values, and infer information about otherwise inaccessible types from their member names. |
-| `Image Canvas Tool` | Collects selected images, images in the selected folder, or images in the selected folder and its subfolders; displays resolutions, highlights dimensions that are not multiples of 4 in red, and can expand the canvas using a fill color and a nine-point pivot. |
+| `Guid生成器丨Guid Generator` | Generates system GUIDs and Unity GUIDs. |
+| `正则表达式测试丨Regex Tester` | Tests regular expressions and displays matches, groups, and captures. |
+| `颜色混合器丨Color Blender` | Previews common color blending operations. |
+| `时间帮助面板丨Time Panel` | Views and parses current time information in multiple formats. |
+| `类型反射助手丨Type Reflection Helper` | Uses reflection to view fields, properties, and enum values, and infer information about otherwise inaccessible types from their member names. |
 
 ### Experimental features
 
 | Menu name | Description |
 | --- | --- |
-| `Shader Keyword Manager` | Views and manages material and Shader keyword states. |
-| `Animator Controller Combiner` | Combines Animator Controller data through an editor window. |
+| `实验性功能丨Experimental/Shader关键字管理丨Shader Keyword Manager` | Views and manages material and Shader keyword states. |
+| `实验性功能丨Experimental/动画控制器合并器丨Animator Controller Combiner` | Combines Animator Controller data through an editor window. |
 
 ### Other editor features
 
@@ -134,12 +138,7 @@ EZEditorTools/                                    — EZEditorTools package root
 └── Editor/                                       — Editor scripts and assembly definition.
     ├── EZEditorToolsMenuItems.cs                 — Root menu entries for EZEditorTools windows and editor operations.
     ├── EZMenuOrder.cs                            — Display order definitions for menus and custom assets.
-    ├── Localization/                             — Editor UI localization support.
-    │   ├── EZLocalization.cs                     — Defines language options and provides language selection, text lookup, and JSON language loading.
-    │   ├── EZLocalizationMenuItems.cs            — Provides language selection menu items.
-    │   └── Languages/                            — Editable language JSON files.
-    │       ├── zh-CN.json                       — Simplified Chinese text.
-    │       └── en-US.json                       — English text.
+    ├── EZLocalization.cs                         — Defines language options and provides language selection, text lookup, and bilingual text.
     ├── EZhex1991.EZEditorTools.Editor.asmdef     — Editor-only assembly definition.
     ├── Common/                                   — Shared editor utilities and supporting implementations.
     │   ├── EZButtonPropertyAttribute.cs           — Defines an Inspector button attribute for invoking object methods.

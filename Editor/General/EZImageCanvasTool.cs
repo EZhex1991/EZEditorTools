@@ -121,32 +121,32 @@ namespace EZhex1991.EZEditorTools
             EZEditorGUIUtility.WindowTitle(this);
 
             EditorGUI.BeginChangeCheck();
-            string[] scopeOptions = EZLocalization.GetOptions(
-                "ImageCanvasTool.Scope.SelectedImages",
-                "ImageCanvasTool.Scope.SelectedFolder",
-                "ImageCanvasTool.Scope.SelectedFolderAndSubfolders");
+            string[] scopeOptions = EZLocalization.GetOptions<EZImageCanvasTool>(
+                "Scope.SelectedImages",
+                "Scope.SelectedFolder",
+                "Scope.SelectedFolderAndSubfolders");
             collectionScope = (ImageCollectionScope)EditorGUILayout.Popup(
-                EZLocalization.Get("ImageCanvasTool.ImageScope"),
+                EZLocalization.Get<EZImageCanvasTool>("ImageScope"),
                 (int)collectionScope,
                 scopeOptions);
             if (collectionScope != ImageCollectionScope.SelectedImages)
             {
                 folder = (DefaultAsset)EditorGUILayout.ObjectField(
-                    EZLocalization.Get("ImageCanvasTool.Folder"), folder, typeof(DefaultAsset), false);
+                    EZLocalization.Get<EZImageCanvasTool>("Folder"), folder, typeof(DefaultAsset), false);
             }
-            fillColor = EditorGUILayout.ColorField(EZLocalization.Get("ImageCanvasTool.FillColor"), fillColor);
-            string[] pivotOptions = EZLocalization.GetOptions(
-                "ImageCanvasTool.Pivot.TopLeft",
-                "ImageCanvasTool.Pivot.TopCenter",
-                "ImageCanvasTool.Pivot.TopRight",
-                "ImageCanvasTool.Pivot.MiddleLeft",
-                "ImageCanvasTool.Pivot.Center",
-                "ImageCanvasTool.Pivot.MiddleRight",
-                "ImageCanvasTool.Pivot.BottomLeft",
-                "ImageCanvasTool.Pivot.BottomCenter",
-                "ImageCanvasTool.Pivot.BottomRight");
+            fillColor = EditorGUILayout.ColorField(EZLocalization.Get<EZImageCanvasTool>("FillColor"), fillColor);
+            string[] pivotOptions = EZLocalization.GetOptions<EZImageCanvasTool>(
+                "Pivot.TopLeft",
+                "Pivot.TopCenter",
+                "Pivot.TopRight",
+                "Pivot.MiddleLeft",
+                "Pivot.Center",
+                "Pivot.MiddleRight",
+                "Pivot.BottomLeft",
+                "Pivot.BottomCenter",
+                "Pivot.BottomRight");
             pivot = (ImagePivot)EditorGUILayout.Popup(
-                EZLocalization.Get("ImageCanvasTool.Pivot"),
+                EZLocalization.Get<EZImageCanvasTool>("Pivot"),
                 (int)pivot,
                 pivotOptions);
             if (EditorGUI.EndChangeCheck())
@@ -160,31 +160,31 @@ namespace EZhex1991.EZEditorTools
             {
                 bool guiEnabled = GUI.enabled;
                 GUI.enabled = guiEnabled && HasCollectionSource();
-                if (GUILayout.Button(EZLocalization.Get("ImageCanvasTool.Refresh")))
+                if (GUILayout.Button(EZLocalization.Get<EZImageCanvasTool>("Refresh")))
                 {
                     Refresh();
                 }
 
                 int invalidCount = textures.Count(info => !info.IsMultipleOfFour);
                 GUI.enabled = guiEnabled && invalidCount > 0;
-                if (GUILayout.Button(EZLocalization.Get("ImageCanvasTool.ProcessAll")))
+                if (GUILayout.Button(EZLocalization.Get<EZImageCanvasTool>("ProcessAll")))
                 {
                     processAll = true;
                 }
                 GUI.enabled = guiEnabled;
 
                 EditorGUILayout.LabelField(
-                    string.Format(EZLocalization.Get("ImageCanvasTool.ImagesSummary"), textures.Count, invalidCount),
+                    string.Format(EZLocalization.Get<EZImageCanvasTool>("ImagesSummary"), textures.Count, invalidCount),
                     EditorStyles.miniLabel);
             }
 
             if (collectionScope != ImageCollectionScope.SelectedImages && folder != null && !IsValidFolder())
             {
-                EditorGUILayout.HelpBox(EZLocalization.Get("ImageCanvasTool.InvalidFolder"), MessageType.Warning);
+                EditorGUILayout.HelpBox(EZLocalization.Get<EZImageCanvasTool>("InvalidFolder"), MessageType.Warning);
                 return;
             }
 
-            EditorGUILayout.HelpBox(EZLocalization.Get("ImageCanvasTool.ProcessingWarning"), MessageType.Info);
+            EditorGUILayout.HelpBox(EZLocalization.Get<EZImageCanvasTool>("ProcessingWarning"), MessageType.Info);
 
             if (textures.Count == 0)
             {
@@ -195,9 +195,9 @@ namespace EZhex1991.EZEditorTools
             EditorGUILayout.Space();
             using (new EditorGUILayout.HorizontalScope(EditorStyles.toolbar))
             {
-                GUILayout.Label(EZLocalization.Get("ImageCanvasTool.Asset"), GUILayout.MinWidth(100));
-                GUILayout.Label(EZLocalization.Get("ImageCanvasTool.Width"), GUILayout.Width(60));
-                GUILayout.Label(EZLocalization.Get("ImageCanvasTool.Height"), GUILayout.Width(60));
+                GUILayout.Label(EZLocalization.Get<EZImageCanvasTool>("Asset"), GUILayout.MinWidth(100));
+                GUILayout.Label(EZLocalization.Get<EZImageCanvasTool>("Width"), GUILayout.Width(60));
+                GUILayout.Label(EZLocalization.Get<EZImageCanvasTool>("Height"), GUILayout.Width(60));
                 GUILayout.Label(string.Empty, GUILayout.Width(70));
             }
 
@@ -219,7 +219,7 @@ namespace EZhex1991.EZEditorTools
 
                     bool guiEnabled = GUI.enabled;
                     GUI.enabled = guiEnabled && !info.IsMultipleOfFour && info.IsSupported;
-                    if (GUILayout.Button(EZLocalization.Get("ImageCanvasTool.Process"), GUILayout.Width(70)))
+                    if (GUILayout.Button(EZLocalization.Get<EZImageCanvasTool>("Process"), GUILayout.Width(70)))
                     {
                         textureToProcess = info;
                     }
@@ -254,8 +254,8 @@ namespace EZhex1991.EZEditorTools
         private string GetEmptyMessage()
         {
             return collectionScope == ImageCollectionScope.SelectedImages
-                ? EZLocalization.Get("ImageCanvasTool.NoSelectedImages")
-                : EZLocalization.Get("ImageCanvasTool.NoFolderImages");
+                ? EZLocalization.Get<EZImageCanvasTool>("NoSelectedImages")
+                : EZLocalization.Get<EZImageCanvasTool>("NoFolderImages");
         }
 
         private void Refresh()

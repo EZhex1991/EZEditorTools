@@ -11,17 +11,22 @@ EZEditorTools 是一个独立的 Unity 编辑器工具模块，提供通用的�
 
 所有窗口和功能均从 Unity 编辑器的 `EZEditorTools` 根菜单访问。以下分组与 `EZMenuOrder` 中的 Section 保持一致。
 
-语言可以通过 `EZEditorTools/Language` 菜单切换为系统语言、简体中文或 English，当前语言设置会保存在编辑器本地。该设置仅对已接入本地化的窗口界面生效，不会修改菜单名称。
+语言可以通过 `EZEditorTools/Language` 菜单切换为简体中文或 English，默认使用 English，当前语言设置会保存在编辑器本地。该设置仅对已接入本地化的窗口界面生效，不会修改菜单名称。
+
+### Scene Object Active Toggle
+
+| 菜单名称 | 说明 |
+| --- | --- |
+| `场景对象快捷开关丨Scene Object Active Toggle` | 使用编辑器本地设置控制是否在 Hierarchy 中显示 GameObject 的 Active Toggle。 |
 
 ### 项目和编辑器操作
 
 | 菜单名称 | 说明 |
 | --- | --- |
-| `Save Assets` | Editor 下序列化资源文件的修改不会立即写入磁盘，使用该菜单可以强制保存资源文件。 |
-| `Refresh AssetDatabase` | 刷新 Unity AssetDatabase。 |
-| `Open Persistent Folder` | 打开 Unity 的持久化数据目录。 |
-| `Clear Persistent Folder` | 清空 Unity 的持久化数据目录。 |
-| `Hierarchy Active Toggle` | 使用编辑器本地设置控制是否在 Hierarchy 中显示 GameObject 的 Active Toggle。 |
+| `保存资产修改丨Save Assets` | Editor 下序列化资源文件的修改不会立即写入磁盘，使用该菜单可以强制保存资源文件。 |
+| `刷新资产目录丨Refresh AssetDatabase` | 刷新 Unity AssetDatabase。 |
+| `打开持久化目录丨Open Persistent Folder` | 打开 Unity 的持久化数据目录。 |
+| `清空持久化目录丨Clear Persistent Folder` | 清空 Unity 的持久化数据目录。 |
 | `PlayerPrefs Editor` | 查看、修改和删除 PlayerPrefs 数据，目前仅支持 Windows。 |
 | `EditorPrefs Editor` | 查看、修改和删除 EditorPrefs 数据，目前仅支持 Windows。 |
 
@@ -29,38 +34,37 @@ EZEditorTools 是一个独立的 Unity 编辑器工具模块，提供通用的�
 
 | 菜单名称 | 功能 |
 | --- | --- |
-| `Renamer` | 批量重命名工具窗口，支持正则式匹配，整理资源目录很方便。 |
-| `Image Canvas Tool` | 检查图片分辨率，并将不符合 4 的倍数要求的图片画布扩展到最近的 4 的倍数。 |
-| `Material Optimizer` | 查看和删除材质中的 Keywords 和多余的 Properties，也可以迁移旧的 Property。 |
+| `批量重命名丨Renamer` | 批量重命名工具窗口，支持正则式匹配，整理资源目录很方便。 |
+| `图片画布工具丨Image Canvas Tool` | 检查图片分辨率，并将不符合 4 的倍数要求的图片画布扩展到最近的 4 的倍数。 |
+| `材质优化器丨Material Optimizer` | 查看和删除材质中的 Keywords 和多余的 Properties，也可以迁移旧的 Property。 |
 
 ### 资源关系和构建
 
 | 菜单名称 | 功能 |
 | --- | --- |
-| `Asset Reference Viewer` | 查看资源依赖关系和场景引用。 |
-| `Corresponding Object Viewer` | 查看对象及其对应的源对象和资源。 |
-| `Font Reference Viewer` | 查找引用指定字体的 UI 文本组件。 |
-| `Hierarchy Diff Checker` | 对比两个 Transform 层级结构的差异。 |
-| `Property Path Viewer` | 查看对象的序列化属性和属性路径。 |
-| `Asset Bundle Manager` | 查看和管理基于资源标签的 AssetBundle 构建结果及相关资源。 |
+| `资源引用查看器丨Asset Reference Viewer` | 查看资源依赖关系和场景引用。 |
+| `对应物体查看器丨Corresponding Object Viewer` | 查看对象及其对应的源对象和资源。 |
+| `字体引用查看器丨Font Reference Viewer` | 查找引用指定字体的 UI 文本组件。 |
+| `层级差异检查器丨Hierarchy Diff Checker` | 对比两个 Transform 层级结构的差异。 |
+| `属性路径查看器丨Property Path Viewer` | 查看对象的序列化属性和属性路径。 |
+| `Bundle包管理丨Asset Bundle Manager` | 查看和管理基于资源标签的 AssetBundle 构建结果及相关资源。 |
 
 ### 调试和辅助工具
 
 | 菜单名称 | 功能 |
 | --- | --- |
-| `Guid Generator` | 生成系统 GUID 和 Unity GUID。 |
-| `Regex Tester` | 测试正则表达式，并显示匹配项、分组和捕获结果。 |
-| `Color Blender` | 预览常见的颜色混合运算结果。 |
-| `Time Panel` | 查看和解析当前时间及其各类格式化结果。 |
-| `Type Reflection Helper` | 通过反射查看类型的字段、属性、方法和枚举值，也可以通过成员名称推断不可直接访问的类型信息。 |
-| `Image Canvas Tool` | 支持收集选中的图片、选中目录中的图片或选中目录及子目录中的图片；显示分辨率，将宽或高不是 4 的倍数的图片标红，并支持按填充颜色、九宫格 Pivot 扩展画布。 |
+| `Guid生成器丨Guid Generator` | 生成系统 GUID 和 Unity GUID。 |
+| `正则表达式测试丨Regex Tester` | 测试正则表达式，并显示匹配项、分组和捕获结果。 |
+| `颜色混合器丨Color Blender` | 预览常见的颜色混合运算结果。 |
+| `时间帮助面板丨Time Panel` | 查看和解析当前时间及其各类格式化结果。 |
+| `类型反射助手丨Type Reflection Helper` | 通过反射查看类型的字段、属性、方法和枚举值，也可以通过成员名称推断不可直接访问的类型信息。 |
 
 ### 实验性功能
 
 | 菜单名称 | 功能 |
 | --- | --- |
-| `Shader Keyword Manager` | 查看和管理材质及 Shader 的关键字状态。 |
-| `Animator Controller Combiner` | 通过编辑器窗口合并 Animator Controller 数据。 |
+| `实验性功能丨Experimental/Shader关键字管理丨Shader Keyword Manager` | 查看和管理材质及 Shader 的关键字状态。 |
+| `实验性功能丨Experimental/动画控制器合并器丨Animator Controller Combiner` | 通过编辑器窗口合并 Animator Controller 数据。 |
 
 ## 自定义资产和功能说明
 
@@ -129,12 +133,7 @@ EZEditorTools/                                    — EZEditorTools 模块根目
 └── Editor/                                       — 编辑器脚本和程序集定义目录。
     ├── EZEditorToolsMenuItems.cs                 — EZEditorTools 总菜单入口，注册窗口和通用编辑器操作。
     ├── EZMenuOrder.cs                            — 定义顶部菜单和自定义资产菜单的显示顺序。
-    ├── Localization/                             — 编辑器界面多语言支持。
-    │   ├── EZLocalization.cs                     — 定义语言选项，并提供语言选择、文本查询和 JSON 语言文件加载。
-    │   ├── EZLocalizationMenuItems.cs            — 提供语言切换菜单。
-    │   └── Languages/                            — 存放可直接编辑的语言 JSON 文件。
-    │       ├── zh-CN.json                       — 简体中文文本。
-    │       └── en-US.json                       — 英文文本。
+    ├── EZLocalization.cs                         — 定义语言选项，并提供语言选择、文本查询和中英文文本。
     ├── EZhex1991.EZEditorTools.Editor.asmdef     — 定义仅面向 Unity Editor 的程序集。
     ├── Common/                                   — 编辑器内部复用的基础脚本和辅助实现。
     │   ├── EZButtonPropertyAttribute.cs           — 定义可在 Inspector 中调用对象方法的按钮特性。
