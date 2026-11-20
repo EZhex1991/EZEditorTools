@@ -53,12 +53,38 @@ namespace EZhex1991.EZEditorTools
 
         protected void OnEnable()
         {
+            LoadPreferences();
             EZLocalization.LanguageChanged += Repaint;
         }
 
         protected void OnDisable()
         {
             EZLocalization.LanguageChanged -= Repaint;
+        }
+
+        private void LoadPreferences()
+        {
+            string scopeName = EditorPrefs.GetString(EZEditorPreferenceKeys.ImageCanvasCollectionScope, ImageCollectionScope.SelectedFolderAndSubfolders.ToString());
+            ImageCollectionScope savedScope;
+            if (System.Enum.TryParse(scopeName, out savedScope) && System.Enum.IsDefined(typeof(ImageCollectionScope), savedScope))
+                collectionScope = savedScope;
+
+            string pivotName = EditorPrefs.GetString(EZEditorPreferenceKeys.ImageCanvasPivot, ImagePivot.Center.ToString());
+            ImagePivot savedPivot;
+            if (System.Enum.TryParse(pivotName, out savedPivot) && System.Enum.IsDefined(typeof(ImagePivot), savedPivot))
+                pivot = savedPivot;
+
+            string colorName = EditorPrefs.GetString(EZEditorPreferenceKeys.ImageCanvasFillColor, ColorUtility.ToHtmlStringRGBA(Color.clear));
+            Color savedColor;
+            if (ColorUtility.TryParseHtmlString("#" + colorName, out savedColor))
+                fillColor = savedColor;
+        }
+
+        private void SavePreferences()
+        {
+            EditorPrefs.SetString(EZEditorPreferenceKeys.ImageCanvasCollectionScope, collectionScope.ToString());
+            EditorPrefs.SetString(EZEditorPreferenceKeys.ImageCanvasPivot, pivot.ToString());
+            EditorPrefs.SetString(EZEditorPreferenceKeys.ImageCanvasFillColor, ColorUtility.ToHtmlStringRGBA(fillColor));
         }
 
         protected void OnSelectionChange()
@@ -125,6 +151,7 @@ namespace EZhex1991.EZEditorTools
                 pivotOptions);
             if (EditorGUI.EndChangeCheck())
             {
+                SavePreferences();
                 Refresh();
             }
 

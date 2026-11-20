@@ -145,6 +145,7 @@ EZEditorTools/                                    — EZEditorTools package root
     │   ├── EZButtonPropertyAttribute.cs           — Defines an Inspector button attribute for invoking object methods.
     │   ├── EZButtonPropertyDrawer.cs              — Draws Inspector buttons for `EZButtonPropertyAttribute`.
     │   ├── EZCopyList.cs                          — Defines file copy lists and their Inspector drawer.
+    │   ├── EZEditorPreferenceKeys.cs               — Centralizes EditorPrefs keys used by EZEditorTools.
     │   ├── EZEditorGUIUtility.cs                  — Common editor GUI drawing helpers.
     │   ├── EZEditorUtility.cs                     — Editor asset, type, and shader query helpers.
     │   ├── EZGameViewUtility.cs                   — Accesses the Unity Game View and its target Display.

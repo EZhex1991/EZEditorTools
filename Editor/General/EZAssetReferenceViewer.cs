@@ -24,6 +24,7 @@ namespace EZhex1991.EZEditorTools
 
         protected void OnEnable()
         {
+            dependenciesRecursive = EditorPrefs.GetBool(EZEditorPreferenceKeys.AssetReferenceDependenciesRecursive, true);
             Refresh();
         }
         protected void OnSelectionChange()
@@ -85,6 +86,7 @@ namespace EZhex1991.EZEditorTools
             if (dependenciesRecursive != EditorGUILayout.Toggle("Show Recursive Dependencies", dependenciesRecursive))
             {
                 dependenciesRecursive = !dependenciesRecursive;
+                EditorPrefs.SetBool(EZEditorPreferenceKeys.AssetReferenceDependenciesRecursive, dependenciesRecursive);
                 Refresh();
             }
             EditorGUILayout.EndHorizontal();

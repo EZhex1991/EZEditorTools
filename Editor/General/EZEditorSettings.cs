@@ -12,14 +12,12 @@ namespace EZhex1991.EZEditorTools
     [InitializeOnLoad]
     public static class EZEditorSettings
     {
-        private const string HierarchyTogglePreferenceKey = "EZEditorTools.HierarchyToggleEnabled";
-
         public static bool HierarchyToggleEnabled
         {
-            get { return EditorPrefs.GetBool(HierarchyTogglePreferenceKey, false); }
+            get { return EditorPrefs.GetBool(EZEditorPreferenceKeys.HierarchyToggleEnabled, false); }
             set
             {
-                EditorPrefs.SetBool(HierarchyTogglePreferenceKey, value);
+                EditorPrefs.SetBool(EZEditorPreferenceKeys.HierarchyToggleEnabled, value);
                 EditorApplication.RepaintHierarchyWindow();
             }
         }

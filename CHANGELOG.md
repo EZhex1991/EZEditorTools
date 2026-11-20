@@ -8,6 +8,7 @@
 - Moved localization text to editable JSON language files.
 - Added the `EditorPrefs Editor` window for viewing, editing, and deleting EditorPrefs data on Windows.
 - Added the `Hierarchy Active Toggle` menu for enabling or disabling Hierarchy Active toggles.
+- Added editor-local persistence for Image Canvas Tool preferences, Asset Reference Viewer recursion, and Material Optimizer property names.
 - Added the `Image Canvas Tool` editor window for checking image resolutions in a selected folder.
 - Added an image Inspector button for expanding the current image canvas to a multiple of 4.
 - Added three image collection scopes to the `Image Canvas Tool`.

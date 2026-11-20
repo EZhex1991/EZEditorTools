@@ -19,7 +19,6 @@ namespace EZhex1991.EZEditorTools
 
     public static class EZLocalization
     {
-        private const string LanguagePreferenceKey = "EZEditorTools.Language";
         private const string LanguageAssetRoot = "Packages/ezhex1991.ezeditortools/Editor/Localization/Languages/";
 
         [Serializable]
@@ -43,14 +42,14 @@ namespace EZhex1991.EZEditorTools
 
         public static EZLanguage Language
         {
-            get { return (EZLanguage)EditorPrefs.GetInt(LanguagePreferenceKey, (int)EZLanguage.System); }
+            get { return (EZLanguage)EditorPrefs.GetInt(EZEditorPreferenceKeys.Language, (int)EZLanguage.System); }
         }
 
         public static event Action LanguageChanged;
 
         public static void SetLanguage(EZLanguage language)
         {
-            EditorPrefs.SetInt(LanguagePreferenceKey, (int)language);
+            EditorPrefs.SetInt(EZEditorPreferenceKeys.Language, (int)language);
             if (LanguageChanged != null)
             {
                 LanguageChanged();

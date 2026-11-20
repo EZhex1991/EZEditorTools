@@ -43,6 +43,8 @@ namespace EZhex1991.EZEditorTools
 
         private void OnEnable()
         {
+            propertyName1 = EditorPrefs.GetString(EZEditorPreferenceKeys.MaterialPropertyName1, string.Empty);
+            propertyName2 = EditorPrefs.GetString(EZEditorPreferenceKeys.MaterialPropertyName2, string.Empty);
             GetMaterials();
             Undo.undoRedoPerformed += Repaint;
         }
@@ -76,8 +78,14 @@ namespace EZhex1991.EZEditorTools
                 }
             }
 
+            EditorGUI.BeginChangeCheck();
             propertyName1 = EditorGUILayout.TextField("Copy From", propertyName1);
             propertyName2 = EditorGUILayout.TextField("To", propertyName2);
+            if (EditorGUI.EndChangeCheck())
+            {
+                EditorPrefs.SetString(EZEditorPreferenceKeys.MaterialPropertyName1, propertyName1);
+                EditorPrefs.SetString(EZEditorPreferenceKeys.MaterialPropertyName2, propertyName2);
+            }
             GUI.enabled = !(string.IsNullOrEmpty(propertyName1) || string.IsNullOrEmpty(propertyName2) || propertyName1 == propertyName2);
             if (GUILayout.Button("Copy Property"))
             {

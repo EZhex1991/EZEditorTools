@@ -12,8 +12,6 @@ namespace EZhex1991.EZEditorTools
 {
     public class EZEditorPrefsEditor : EditorWindow
     {
-        private const string LanguagePreferenceKey = "EZEditorTools.Language";
-        private const string HierarchyTogglePreferenceKey = "EZEditorTools.HierarchyToggleEnabled";
         private enum ValueType { String = 0, Int = 1, Float = 2 }
 
         [Serializable]
@@ -74,19 +72,25 @@ namespace EZhex1991.EZEditorTools
             // EditorPrefs does not expose an API for enumerating keys. Keep
             // known EZEditorTools keys visible even if their registry value
             // format is not recognized by the scanner.
-            AddKnownKey(LanguagePreferenceKey);
-            AddKnownKey(HierarchyTogglePreferenceKey);
+            AddKnownKey(EZEditorPreferenceKeys.Language, ValueType.Int);
+            AddKnownKey(EZEditorPreferenceKeys.HierarchyToggleEnabled, ValueType.Int);
+            AddKnownKey(EZEditorPreferenceKeys.ImageCanvasCollectionScope, ValueType.String);
+            AddKnownKey(EZEditorPreferenceKeys.ImageCanvasFillColor, ValueType.String);
+            AddKnownKey(EZEditorPreferenceKeys.ImageCanvasPivot, ValueType.String);
+            AddKnownKey(EZEditorPreferenceKeys.AssetReferenceDependenciesRecursive, ValueType.Int);
+            AddKnownKey(EZEditorPreferenceKeys.MaterialPropertyName1, ValueType.String);
+            AddKnownKey(EZEditorPreferenceKeys.MaterialPropertyName2, ValueType.String);
         }
 
-        private void AddKnownKey(string key)
+        private void AddKnownKey(string key, ValueType type)
         {
             if (EditorPrefs.HasKey(key) && !ContainsKey(key))
-                pairList.Add(new KeyTypePair(key, ValueType.Int));
+                pairList.Add(new KeyTypePair(key, type));
         }
 
         private static bool IsKnownIntKey(string key)
         {
-            return key == LanguagePreferenceKey || key == HierarchyTogglePreferenceKey;
+            return key == EZEditorPreferenceKeys.Language || key == EZEditorPreferenceKeys.HierarchyToggleEnabled || key == EZEditorPreferenceKeys.AssetReferenceDependenciesRecursive;
         }
 
         private bool ContainsKey(string key)

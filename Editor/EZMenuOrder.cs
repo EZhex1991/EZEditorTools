@@ -10,8 +10,8 @@ namespace EZhex1991.EZEditorTools
         _____SECTION_0_____ = 10000,
         Language,
         LanguageSystem,
-        LanguageChinese,
         LanguageEnglish,
+        LanguageChinese,
 
         _____SECTION_1_____ = _____SECTION_0_____ + 100,
         HierarchyActiveToggle,

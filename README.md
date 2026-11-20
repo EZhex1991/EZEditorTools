@@ -140,6 +140,7 @@ EZEditorTools/                                    — EZEditorTools 模块根目
     │   ├── EZButtonPropertyAttribute.cs           — 定义可在 Inspector 中调用对象方法的按钮特性。
     │   ├── EZButtonPropertyDrawer.cs              — 绘制 `EZButtonPropertyAttribute` 对应的 Inspector 按钮。
     │   ├── EZCopyList.cs                         — 定义文件复制列表及其 Inspector 绘制器。
+    │   ├── EZEditorPreferenceKeys.cs              — 集中定义 EZEditorTools 使用的 EditorPrefs 键名。
     │   ├── EZEditorGUIUtility.cs                 — 提供通用编辑器 GUI 绘制辅助方法。
     │   ├── EZEditorUtility.cs                    — 提供编辑器资源、类型和着色器查询辅助方法。
     │   ├── EZGameViewUtility.cs                  — 访问 Unity Game View，并读取或修改当前目标 Display。
