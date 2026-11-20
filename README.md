@@ -11,6 +11,8 @@ EZEditorTools 是一个独立的 Unity 编辑器工具模块，提供通用的�
 
 所有窗口和功能均从 Unity 编辑器的 `EZEditorTools` 根菜单访问。以下分组与 `EZMenuOrder` 中的 Section 保持一致。
 
+语言可以通过 `EZEditorTools/Language` 菜单切换为系统语言、简体中文或 English，当前语言设置会保存在编辑器本地。该设置仅对已接入本地化的窗口界面生效，不会修改菜单名称。
+
 ### 项目和编辑器操作
 
 | 菜单名称 | 说明 |
@@ -19,13 +21,16 @@ EZEditorTools 是一个独立的 Unity 编辑器工具模块，提供通用的�
 | `Refresh AssetDatabase` | 刷新 Unity AssetDatabase。 |
 | `Open Persistent Folder` | 打开 Unity 的持久化数据目录。 |
 | `Clear Persistent Folder` | 清空 Unity 的持久化数据目录。 |
+| `Hierarchy Active Toggle` | 使用编辑器本地设置控制是否在 Hierarchy 中显示 GameObject 的 Active Toggle。 |
 | `PlayerPrefs Editor` | 查看、修改和删除 PlayerPrefs 数据，目前仅支持 Windows。 |
+| `EditorPrefs Editor` | 查看、修改和删除 EditorPrefs 数据，目前仅支持 Windows。 |
 
 ### 资源处理
 
 | 菜单名称 | 功能 |
 | --- | --- |
 | `Renamer` | 批量重命名工具窗口，支持正则式匹配，整理资源目录很方便。 |
+| `Image Canvas Tool` | 检查图片分辨率，并将不符合 4 的倍数要求的图片画布扩展到最近的 4 的倍数。 |
 | `Material Optimizer` | 查看和删除材质中的 Keywords 和多余的 Properties，也可以迁移旧的 Property。 |
 
 ### 资源关系和构建
@@ -48,6 +53,7 @@ EZEditorTools 是一个独立的 Unity 编辑器工具模块，提供通用的�
 | `Color Blender` | 预览常见的颜色混合运算结果。 |
 | `Time Panel` | 查看和解析当前时间及其各类格式化结果。 |
 | `Type Reflection Helper` | 通过反射查看类型的字段、属性、方法和枚举值，也可以通过成员名称推断不可直接访问的类型信息。 |
+| `Image Canvas Tool` | 支持收集选中的图片、选中目录中的图片或选中目录及子目录中的图片；显示分辨率，将宽或高不是 4 的倍数的图片标红，并支持按填充颜色、九宫格 Pivot 扩展画布。 |
 
 ### 实验性功能
 
@@ -98,6 +104,7 @@ EZEditorTools 是一个独立的 Unity 编辑器工具模块，提供通用的�
 ### 其他编辑器功能
 
 - `Transform Context Menu`：为 Transform Inspector 提供重置和对齐相关的右键菜单功能。
+- 图片资源 Inspector：提供 `Expand Canvas to Multiple of 4` 按钮，使用透明填充和中心 Pivot 将当前图片画布扩展到最近的 4 的倍数；符合要求时按钮不可用。
 
 ## 目录结构和脚本说明
 
@@ -122,6 +129,12 @@ EZEditorTools/                                    — EZEditorTools 模块根目
 └── Editor/                                       — 编辑器脚本和程序集定义目录。
     ├── EZEditorToolsMenuItems.cs                 — EZEditorTools 总菜单入口，注册窗口和通用编辑器操作。
     ├── EZMenuOrder.cs                            — 定义顶部菜单和自定义资产菜单的显示顺序。
+    ├── Localization/                             — 编辑器界面多语言支持。
+    │   ├── EZLocalization.cs                     — 定义语言选项，并提供语言选择、文本查询和 JSON 语言文件加载。
+    │   ├── EZLocalizationMenuItems.cs            — 提供语言切换菜单。
+    │   └── Languages/                            — 存放可直接编辑的语言 JSON 文件。
+    │       ├── zh-CN.json                       — 简体中文文本。
+    │       └── en-US.json                       — 英文文本。
     ├── EZhex1991.EZEditorTools.Editor.asmdef     — 定义仅面向 Unity Editor 的程序集。
     ├── Common/                                   — 编辑器内部复用的基础脚本和辅助实现。
     │   ├── EZButtonPropertyAttribute.cs           — 定义可在 Inspector 中调用对象方法的按钮特性。
@@ -142,13 +155,16 @@ EZEditorTools/                                    — EZEditorTools 模块根目
     │   ├── EZGuidGenerator.cs                    — 生成系统 GUID 和 Unity GUID 的窗口。
     │   ├── EZHierachyDiffChecker.cs              — 对比两个 Transform 层级结构的窗口。
     │   ├── EZPlayerPrefsEditor.cs                — 查看、修改和删除 PlayerPrefs 的窗口。
+    │   ├── EZEditorPrefsEditor.cs                — 查看、修改和删除 EditorPrefs 的窗口。
     │   ├── EZPropertyPathViewer.cs               — 查看序列化属性和属性路径的窗口。
     │   ├── EZRegexTester.cs                      — 测试正则表达式的窗口。
     │   ├── EZShaderKeywordManager.cs             — 查看和管理材质及 Shader 关键字的窗口。
     │   ├── EZMaterialOptimizer.cs                — 批量优化选中材质属性的窗口。
     │   ├── EZTimePanel.cs                        — 查看和解析时间信息的窗口。
     │   ├── EZTransformContextMenu.cs              — 为 Transform Inspector 提供重置和对齐右键菜单。
-    │   └── EZTypeReflectionHelper.cs             — 查看类型反射信息的窗口。
+    │   ├── EZTypeReflectionHelper.cs             — 查看类型反射信息的窗口。
+    │   ├── EZImageCanvasTool.cs                  — 检查图片分辨率，并按填充颜色和九宫格 Pivot 扩展画布。
+    │   └── EZImageCanvasInspectorExtension.cs    — 在图片 Inspector 中提供画布扩展按钮。
     ├── MaterialMap/                              — 共同实现材质映射资产及其 Inspector 的脚本集合。
     │   ├── EZMapAsset.cs                         — 提供可序列化键值映射资产的基础实现。
     │   ├── EZMapAssetEditor.cs                   — 提供键值映射资产的通用 Inspector 和列表绘制。

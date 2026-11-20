@@ -33,8 +33,26 @@ namespace EZhex1991.EZEditorTools
         [MenuItem(Root + "Color Blender", false, (int)EZMenuOrder.ColorBlender)]
         private static void ShowColorBlender() => EditorWindow.GetWindow<EZColorBlender>("Color Blender").Show();
 
+        [MenuItem(Root + "Hierarchy Active Toggle", false, (int)EZMenuOrder.HierarchyActiveToggle)]
+        private static void ToggleHierarchyActiveToggle()
+        {
+            EZEditorSettings.HierarchyToggleEnabled = !EZEditorSettings.HierarchyToggleEnabled;
+        }
+
+        [MenuItem(Root + "Hierarchy Active Toggle", true)]
+        private static bool ValidateHierarchyActiveToggle()
+        {
+            Menu.SetChecked(Root + "Hierarchy Active Toggle", EZEditorSettings.HierarchyToggleEnabled);
+            return true;
+        }
+
+#if UNITY_EDITOR_WIN
         [MenuItem(Root + "PlayerPrefs Editor", false, (int)EZMenuOrder.PlayerPrefsEditor)]
         private static void ShowPlayerPrefsEditor() => EditorWindow.GetWindow<EZPlayerPrefsEditor>("PlayerPrefs Editor").Show();
+
+        [MenuItem(Root + "EditorPrefs Editor", false, (int)EZMenuOrder.EditorPrefsEditor)]
+        private static void ShowEditorPrefsEditor() => EditorWindow.GetWindow<EZEditorPrefsEditor>("EditorPrefs Editor").Show();
+#endif
 
         [MenuItem(Root + "Time Panel", false, (int)EZMenuOrder.TimePanel)]
         private static void ShowTimePanel() => EditorWindow.GetWindow<EZTimePanel>(" Time Panel").Show();
@@ -56,6 +74,9 @@ namespace EZhex1991.EZEditorTools
 
         [MenuItem(Root + "Type Reflection Helper", false, (int)EZMenuOrder.TypeReflectionHelper)]
         private static void ShowTypeReflectionHelper() => EditorWindow.GetWindow<EZTypeReflectionHelper>("Type Reflection Helper").Show();
+
+        [MenuItem(Root + "Image Canvas Tool", false, (int)EZMenuOrder.ImageCanvasTool)]
+        private static void ShowImageCanvasTool() => EditorWindow.GetWindow<EZImageCanvasTool>("Image Canvas Tool").Show();
 
         [MenuItem(Root + "Experimental/Animator Controller Combiner", false, (int)EZMenuOrder.AnimatorControllerCombiner)]
         private static void ShowAnimatorControllerCombiner() => EditorWindow.GetWindow<EZAnimatorControllerCombiner>("Animator Controller Combiner").Show();

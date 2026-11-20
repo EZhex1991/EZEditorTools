@@ -30,7 +30,7 @@ namespace EZhex1991.EZEditorTools
         public static void WindowTitle(EditorWindow target)
         {
             GUI.enabled = false;
-            EditorGUILayout.ObjectField("Script", MonoScript.FromScriptableObject(target), typeof(MonoScript), false);
+            EditorGUILayout.ObjectField(EZLocalization.Get("Common.Script"), MonoScript.FromScriptableObject(target), typeof(MonoScript), false);
             EditorGUILayout.Space();
             GUI.enabled = true;
         }
@@ -38,16 +38,16 @@ namespace EZhex1991.EZEditorTools
         public static void ScriptableObjectTitle(ScriptableObject target, bool showTarget = true)
         {
             GUI.enabled = false;
-            EditorGUILayout.ObjectField("Script", MonoScript.FromScriptableObject(target), typeof(MonoScript), false);
+            EditorGUILayout.ObjectField(EZLocalization.Get("Common.Script"), MonoScript.FromScriptableObject(target), typeof(MonoScript), false);
             if (showTarget)
-                EditorGUILayout.ObjectField("Target", target, typeof(Object), false);
+                EditorGUILayout.ObjectField(EZLocalization.Get("Common.Target"), target, typeof(Object), false);
             GUI.enabled = true;
         }
 
         public static void MonoBehaviourTitle(MonoBehaviour target)
         {
             GUI.enabled = false;
-            EditorGUILayout.ObjectField("Script", MonoScript.FromMonoBehaviour(target), typeof(MonoScript), false);
+            EditorGUILayout.ObjectField(EZLocalization.Get("Common.Script"), MonoScript.FromMonoBehaviour(target), typeof(MonoScript), false);
             GUI.enabled = true;
         }
 

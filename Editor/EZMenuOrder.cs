@@ -8,18 +8,28 @@ namespace EZhex1991.EZEditorTools
     public enum EZMenuOrder
     {
         _____SECTION_0_____ = 10000,
+        Language,
+        LanguageSystem,
+        LanguageChinese,
+        LanguageEnglish,
+
         _____SECTION_1_____ = _____SECTION_0_____ + 100,
+        HierarchyActiveToggle,
+
+        _____SECTION_2_____ = _____SECTION_0_____ + 200,
         SaveAssets,
         RefreshAssetDatabase,
         OpenPersistentFolder,
         ClearPersistentFolder,
         PlayerPrefsEditor,
-
-        _____SECTION_2_____ = _____SECTION_0_____ + 200,
-        Renamer,
-        MaterialOptimizer,
+        EditorPrefsEditor,
 
         _____SECTION_3_____ = _____SECTION_0_____ + 300,
+        Renamer,
+        ImageCanvasTool,
+        MaterialOptimizer,
+
+        _____SECTION_4_____ = _____SECTION_0_____ + 400,
         AssetReferenceViewer,
         CorrespondingObjectViewer,
         FontReferenceViewer,
@@ -27,20 +37,20 @@ namespace EZhex1991.EZEditorTools
         PropertyPathViewer,
         AssetBundleManager,
 
-        _____SECTION_4_____ = _____SECTION_0_____ + 400,
-
         _____SECTION_5_____ = _____SECTION_0_____ + 500,
 
         _____SECTION_6_____ = _____SECTION_0_____ + 600,
+
+        _____SECTION_7_____ = _____SECTION_0_____ + 700,
         GuidGenerator,
         RegexTester,
         ColorBlender,
         TimePanel,
         TypeReflectionHelper,
 
-        _____SECTION_7_____ = _____SECTION_0_____ + 700,
-
         _____SECTION_8_____ = _____SECTION_0_____ + 800,
+
+        _____SECTION_9_____ = _____SECTION_0_____ + 900,
         ShaderKeywordManager,
         AnimatorControllerCombiner,
     }
