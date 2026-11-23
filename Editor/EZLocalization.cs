@@ -58,8 +58,6 @@ namespace EZhex1991.EZEditorTools
                 { EZLanguage.English, new Dictionary<string, string>() }
             };
 
-            Add(result, "Common", "Script", "\u811a\u672c", "Script");
-            Add(result, "Common", "Target", "\u76ee\u6807", "Target");
             Add(result, "EZImageCanvasTool", "ImageScope", "\u56fe\u7247\u8303\u56f4", "Image Scope");
             Add(result, "EZImageCanvasTool", "Scope.SelectedImages", "\u9009\u4e2d\u7684\u6240\u6709\u56fe\u7247", "Selected Images");
             Add(result, "EZImageCanvasTool", "Scope.SelectedFolder", "\u9009\u4e2d\u7684\u76ee\u5f55\u4e2d\u7684\u6240\u6709\u56fe\u7247", "Selected Folder");

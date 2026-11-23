@@ -191,26 +191,7 @@ namespace EZhex1991.EZEditorTools.Build
             rect.x += width + residue;
             EditorGUI.PropertyField(new Rect(rect.x, rect.y, width + residue - margin, rect.height), m_SearchOption, GUIContent.none);
             rect.x += width + residue;
-            DrawFolderPathField(new Rect(rect.x, rect.y, width + residue * 7 - margin, rect.height), m_SrcDirPath);
-        }
-
-        private static void DrawFolderPathField(Rect rect, SerializedProperty property)
-        {
-            const float buttonWidth = 24f;
-            const float spacing = 2f;
-            Rect pathRect = new Rect(rect.x, rect.y, rect.width - buttonWidth - spacing, rect.height);
-            Rect buttonRect = new Rect(pathRect.xMax + spacing, rect.y, buttonWidth, rect.height);
-
-            property.stringValue = EditorGUI.TextField(pathRect, property.stringValue);
-            if (GUI.Button(buttonRect, "..."))
-            {
-                string path = EditorUtility.OpenFolderPanel("Select Source Folder", property.stringValue, "");
-                if (!string.IsNullOrEmpty(path))
-                {
-                    string projectRelativePath = FileUtil.GetProjectRelativePath(path);
-                    property.stringValue = string.IsNullOrEmpty(projectRelativePath) ? path : projectRelativePath;
-                }
-            }
+            EZEditorGUIUtility.DrawFolderPathField(new Rect(rect.x, rect.y, width + residue * 7 - margin, rect.height), m_SrcDirPath);
         }
 
         private void DrawAssetBundleManager()
