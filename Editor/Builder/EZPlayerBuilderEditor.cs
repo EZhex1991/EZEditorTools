@@ -77,11 +77,13 @@ namespace EZhex1991.EZEditorTools.Build
 
                 EditorGUILayout.PropertyField(m_BuildTarget);
 
+                EditorGUI.BeginDisabledGroup((BuildTarget)m_BuildTarget.intValue == BuildTarget.NoTarget);
                 if (GUILayout.Button("Build"))
                 {
                     playerBuilder.BuildPlayer();
                     GUIUtility.ExitGUI();
                 }
+                EditorGUI.EndDisabledGroup();
                 EditorGUILayout.Space();
                 DrawQuickBuildButtons();
                 EditorGUILayout.Space();
