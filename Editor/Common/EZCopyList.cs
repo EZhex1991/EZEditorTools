@@ -28,8 +28,8 @@ namespace EZhex1991.EZEditorTools
         }
 
         [SerializeField]
-        private PathPair[] m_CopyList;
-        public PathPair[] copyList { get { return m_CopyList; } }
+        private PathPair[] m_PostBuildCopyList;
+        public PathPair[] postBuildCopyList { get { return m_PostBuildCopyList; } }
 
         [SerializeField]
         private string[] m_BlackList = new string[] {
@@ -41,11 +41,11 @@ namespace EZhex1991.EZEditorTools
 
         public void CopyFiles(string destination)
         {
-            for (int i = 0; i < copyList.Length; i++)
+            for (int i = 0; i < postBuildCopyList.Length; i++)
             {
-                EditorUtility.DisplayProgressBar("Copying Files", "", (float)i / copyList.Length);
-                string src = copyList[i].srcPath;
-                string dst = Path.Combine(destination, copyList[i].dstPath);
+                EditorUtility.DisplayProgressBar("Post-build Copy", "", (float)i / postBuildCopyList.Length);
+                string src = postBuildCopyList[i].srcPath;
+                string dst = Path.Combine(destination, postBuildCopyList[i].dstPath);
                 if (string.IsNullOrEmpty(src) || string.IsNullOrEmpty(dst)) continue;
                 if (File.Exists(src))
                 {
@@ -99,17 +99,17 @@ namespace EZhex1991.EZEditorTools
     [CustomPropertyDrawer(typeof(EZCopyList))]
     public class EZCopyListDrawer : PropertyDrawer
     {
-        public SerializedProperty m_CopyList;
-        public ReorderableList copyList;
+        public SerializedProperty m_PostBuildCopyList;
+        public ReorderableList postBuildCopyList;
         public SerializedProperty m_BlackList;
         public ReorderableList blackList;
 
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
-            if (m_CopyList == null)
+            if (m_PostBuildCopyList == null)
             {
-                m_CopyList = property.FindPropertyRelative("m_CopyList");
-                copyList = new ReorderableList(property.serializedObject, m_CopyList)
+                m_PostBuildCopyList = property.FindPropertyRelative("m_PostBuildCopyList");
+                postBuildCopyList = new ReorderableList(property.serializedObject, m_PostBuildCopyList)
                 {
                     drawHeaderCallback = DrawCopyListHeader,
                     drawElementCallback = DrawCopyListElement,
@@ -126,34 +126,34 @@ namespace EZhex1991.EZEditorTools
             }
             EditorGUI.BeginProperty(position, label, property);
             EditorGUI.LabelField(position, label, EditorStyles.boldLabel);
-            EZEditorGUIUtility.DoLayoutReorderableList(copyList);
+            EZEditorGUIUtility.DoLayoutReorderableList(postBuildCopyList, "Post-build Copy");
             EZEditorGUIUtility.DoLayoutReorderableList(blackList);
             EditorGUI.EndProperty();
         }
 
         public void DrawCopyListHeader(Rect rect)
         {
-            rect = EZEditorGUIUtility.CalcReorderableListHeaderRect(rect, copyList);
-            if (copyList.count == 0)
+            rect = EZEditorGUIUtility.CalcReorderableListHeaderRect(rect, postBuildCopyList);
+            if (postBuildCopyList.count == 0)
             {
-                EditorGUI.LabelField(rect, "Copy List");
+                EditorGUI.LabelField(rect, "Post-build Copy");
             }
             else
             {
                 float width = rect.width / 2; float margin = 5;
                 rect.y += 1; rect.width = width - margin;
-                EditorGUI.LabelField(rect, "Src");
+                EditorGUI.LabelField(rect, "Source Path");
                 rect.x += width;
-                EditorGUI.LabelField(rect, "Dst");
+                EditorGUI.LabelField(rect, "Output Relative Path");
             }
         }
         public void DrawCopyListElement(Rect rect, int index, bool isActive, bool isFocused)
         {
-            SerializedProperty m_PathPair = m_CopyList.GetArrayElementAtIndex(index);
+            SerializedProperty m_PathPair = m_PostBuildCopyList.GetArrayElementAtIndex(index);
             SerializedProperty m_SrcPath = m_PathPair.FindPropertyRelative("m_SrcPath");
             SerializedProperty m_DstPath = m_PathPair.FindPropertyRelative("m_DstPath");
 
-            rect = EZEditorGUIUtility.DrawReorderableListIndex(rect, index, copyList);
+            rect = EZEditorGUIUtility.DrawReorderableListIndex(rect, index, postBuildCopyList);
             rect.y += 1; rect.height = EditorGUIUtility.singleLineHeight;
             float width = rect.width / 2; float margin = 5; rect.width = width - margin;
             EditorGUI.PropertyField(rect, m_SrcPath, GUIContent.none);

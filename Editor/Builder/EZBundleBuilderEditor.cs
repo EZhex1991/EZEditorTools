@@ -17,17 +17,15 @@ namespace EZhex1991.EZEditorTools.Build
 
         private SerializedProperty m_BuildTarget;
         private SerializedProperty m_BuildOptions;
-        private SerializedProperty m_OutputPath;
+        private SerializedProperty m_BuildNumber;
+        private SerializedProperty m_OutputDirectory;
+        private SerializedProperty m_OutputPattern;
         private SerializedProperty m_ListFileName;
-        private SerializedProperty m_ManagerMode;
         private SerializedProperty m_ForceRebuild;
-        private SerializedProperty m_CopyList;
+        private SerializedProperty m_PreBuildCopyList;
         private SerializedProperty m_BundleList;
 
-        private SerializedProperty m_ShowAssets;
-        private SerializedProperty m_ShowDependencies;
-
-        private ReorderableList copyList;
+        private ReorderableList preBuildCopyList;
         private ReorderableList bundleList;
 
         void OnEnable()
@@ -35,25 +33,23 @@ namespace EZhex1991.EZEditorTools.Build
             bundleBuilder = target as EZBundleBuilder;
             m_BuildTarget = serializedObject.FindProperty("buildTarget");
             m_BuildOptions = serializedObject.FindProperty("buildOptions");
-            m_OutputPath = serializedObject.FindProperty("outputPath");
+            m_BuildNumber = serializedObject.FindProperty("buildNumber");
+            m_OutputDirectory = serializedObject.FindProperty("outputDirectory");
+            m_OutputPattern = serializedObject.FindProperty("outputPattern");
             m_ListFileName = serializedObject.FindProperty("listFileName");
-            m_ManagerMode = serializedObject.FindProperty("managerMode");
             m_ForceRebuild = serializedObject.FindProperty("forceRebuild");
-            m_CopyList = serializedObject.FindProperty("copyList");
+            m_PreBuildCopyList = serializedObject.FindProperty("preBuildCopyList");
             m_BundleList = serializedObject.FindProperty("bundleList");
-            m_ShowAssets = serializedObject.FindProperty("showAssets");
-            m_ShowDependencies = serializedObject.FindProperty("showDependencies");
-            copyList = new ReorderableList(serializedObject, m_CopyList, true, true, true, true)
+            preBuildCopyList = new ReorderableList(serializedObject, m_PreBuildCopyList, true, true, true, true)
             {
-                drawHeaderCallback = DrawCopyListHeader,
-                drawElementCallback = DrawCopyListElement
+                drawHeaderCallback = DrawPreBuildCopyListHeader,
+                drawElementCallback = DrawPreBuildCopyListElement
             };
             bundleList = new ReorderableList(serializedObject, m_BundleList, true, true, true, true)
             {
                 drawHeaderCallback = DrawBundleListHeader,
                 drawElementCallback = DrawBundleListElement
             };
-            EZBundleManager.Refresh();
         }
         public override void OnInspectorGUI()
         {
@@ -71,134 +67,88 @@ namespace EZhex1991.EZEditorTools.Build
                 }
                 EditorGUI.EndDisabledGroup();
                 EditorGUILayout.Space();
-                DrawQuickBuildButtons();
+                EZBuilderGUIUtility.DrawQuickBuildButtons(
+                    target => EditorApplication.delayCall += delegate () { bundleBuilder.Execute(target); });
                 EditorGUILayout.Space();
             }
 
+            EditorGUILayout.LabelField("Output", EditorStyles.boldLabel);
+            DrawOutputProperties();
+            EditorGUILayout.Space();
+
             EditorGUILayout.LabelField("Build Options", EditorStyles.boldLabel);
-            DrawBaseProperties();
+            DrawBuildOptions();
 
-            EZEditorGUIUtility.DoLayoutReorderableList(copyList);
+            EZEditorGUIUtility.DoLayoutReorderableList(preBuildCopyList, "Pre-build Copy");
 
-            if (m_ManagerMode.boolValue)
-            {
-                EditorGUILayout.BeginHorizontal();
-                string label = string.Format("Bundle List ({0})", AssetDatabase.GetAllAssetBundleNames().Length);
-                m_BundleList.isExpanded = EditorGUILayout.Foldout(m_BundleList.isExpanded, label, true);
-                EditorGUILayout.EndHorizontal();
-                if (m_BundleList.isExpanded)
-                    DrawAssetBundleManager();
-            }
-            else
-            {
-                EZEditorGUIUtility.DoLayoutReorderableList(bundleList);
-            }
+            EZEditorGUIUtility.DoLayoutReorderableList(bundleList);
 
             serializedObject.ApplyModifiedProperties();
         }
 
-        private void DrawQuickBuildButtons()
+        private void DrawOutputProperties()
         {
-            EditorGUILayout.LabelField("Quick Build", EditorStyles.boldLabel);
-            DrawQuickBuildButtonRow(
-                new string[] { "Android", "iOS" },
-                new BuildTarget[] { BuildTarget.Android, BuildTarget.iOS });
-            DrawQuickBuildButtonRow(
-                new string[] { "Win32", "Win64", "OSX" },
-                new BuildTarget[] { BuildTarget.StandaloneWindows, BuildTarget.StandaloneWindows64, BuildTarget.StandaloneOSX });
-            DrawQuickBuildButtonRow(
-                new string[] { "WebGL" },
-                new BuildTarget[] { BuildTarget.WebGL });
+            DrawOutputDirectory(m_OutputDirectory);
+            DrawOutputDirectoryPreview();
+            EditorGUILayout.PropertyField(m_OutputPattern);
+            DrawOutputPatternPreview();
         }
 
-        private void DrawQuickBuildButtonRow(string[] labels, BuildTarget[] buildTargets)
-        {
-            Rect rowRect = EditorGUILayout.GetControlRect(false, EditorGUIUtility.singleLineHeight);
-            const float buttonSpacing = 2f;
-            float buttonWidth = (rowRect.width - buttonSpacing * (labels.Length - 1)) / labels.Length;
-            for (int i = 0; i < labels.Length; i++)
-            {
-                int index = i;
-                Rect buttonRect = new Rect(rowRect.x + (buttonWidth + buttonSpacing) * i, rowRect.y, buttonWidth, rowRect.height);
-                if (GUI.Button(buttonRect, labels[i]))
-                {
-                    EditorApplication.delayCall += delegate () { bundleBuilder.Execute(buildTargets[index]); };
-                }
-            }
-        }
-
-        private void DrawBaseProperties()
+        private void DrawBuildOptions()
         {
             m_BuildOptions.intValue = (int)(BuildAssetBundleOptions)EditorGUILayout.EnumFlagsField("Build Options", (BuildAssetBundleOptions)m_BuildOptions.intValue);
-            EditorGUILayout.BeginHorizontal();
-            EditorGUILayout.PrefixLabel("Output Path");
-            EZEditorGUIUtility.DrawFolderPathField(EditorGUILayout.GetControlRect(), m_OutputPath);
-            EditorGUILayout.EndHorizontal();
-            DrawOutputPathInfo();
+            EZEditorGUIUtility.DrawBuildNumberField(m_BuildNumber);
             EditorGUILayout.PropertyField(m_ListFileName);
             EditorGUILayout.PropertyField(m_ForceRebuild);
-            EditorGUILayout.PropertyField(m_ManagerMode);
         }
 
-        private void DrawOutputPathInfo()
+        private static void DrawOutputDirectory(SerializedProperty property)
         {
-            string fullPath = GetDisplayPath(m_OutputPath.stringValue);
-            BuildTarget previewTarget = (BuildTarget)m_BuildTarget.intValue;
-            if (previewTarget == BuildTarget.NoTarget)
-            {
-                previewTarget = EditorUserBuildSettings.activeBuildTarget;
-            }
-            string openPath = GetFullPath(bundleBuilder.GetOutputPath(previewTarget));
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.PrefixLabel("Output Directory");
+            EZEditorGUIUtility.DrawFolderPathField(EditorGUILayout.GetControlRect(), property);
+            EditorGUILayout.EndHorizontal();
+        }
+
+        private void DrawOutputDirectoryPreview()
+        {
+            string fullPath = EZBuilderPathUtility.GetFullPath(m_OutputDirectory.stringValue);
             EditorGUI.indentLevel++;
             EditorGUILayout.BeginHorizontal();
-            Rect pathRect = GUILayoutUtility.GetRect(new GUIContent(fullPath), GUI.skin.label, GUILayout.ExpandWidth(true));
-            EditorGUI.SelectableLabel(pathRect, fullPath, GUI.skin.label);
-            EditorGUI.BeginDisabledGroup(string.IsNullOrEmpty(openPath));
+            EditorGUILayout.LabelField(fullPath);
+            EditorGUI.BeginDisabledGroup(string.IsNullOrEmpty(m_OutputDirectory.stringValue));
             if (GUILayout.Button("Open", GUILayout.Width(50)))
             {
-                if (!Directory.Exists(openPath)) Directory.CreateDirectory(openPath);
-                EditorUtility.RevealInFinder(openPath);
+                EZBuilderPathUtility.OpenFolder(m_OutputDirectory.stringValue);
             }
             EditorGUI.EndDisabledGroup();
             EditorGUILayout.EndHorizontal();
             EditorGUI.indentLevel--;
         }
 
-        private static string GetFullPath(string path)
+        private void DrawOutputPatternPreview()
         {
-            if (string.IsNullOrEmpty(path)) return string.Empty;
-            if (Path.IsPathRooted(path)) return Path.GetFullPath(path);
-
-            string projectPath = Directory.GetParent(Application.dataPath).FullName;
-            return Path.GetFullPath(Path.Combine(projectPath, path));
+            BuildTarget previewTarget = EZBuilderPathUtility.GetPreviewTarget((BuildTarget)m_BuildTarget.intValue);
+            EditorGUI.indentLevel++;
+            EditorGUILayout.LabelField(bundleBuilder.GetOutputPattern(previewTarget));
+            EditorGUI.indentLevel--;
         }
 
-        private static string GetDisplayPath(string path)
+        private void DrawPreBuildCopyListHeader(Rect rect)
         {
-            if (string.IsNullOrEmpty(path)) return string.Empty;
-            if (path.Contains("<") || path.Contains(">"))
-            {
-                string projectPath = Directory.GetParent(Application.dataPath).FullName;
-                return (projectPath + Path.DirectorySeparatorChar + path).Replace('\\', '/');
-            }
-            return GetFullPath(path);
-        }
-
-        private void DrawCopyListHeader(Rect rect)
-        {
-            rect = EZEditorGUIUtility.CalcReorderableListHeaderRect(rect, copyList);
+            rect = EZEditorGUIUtility.CalcReorderableListHeaderRect(rect, preBuildCopyList);
             rect.y += 1;
             float width = rect.width / 2; float margin = 5;
-            EditorGUI.LabelField(new Rect(rect.x, rect.y, width - margin, rect.height), "Destination");
+            EditorGUI.LabelField(new Rect(rect.x, rect.y, width - margin, rect.height), "Destination Path");
             rect.x += width;
-            EditorGUI.LabelField(new Rect(rect.x, rect.y, width - margin, rect.height), "Source");
+            EditorGUI.LabelField(new Rect(rect.x, rect.y, width - margin, rect.height), "Source Path");
         }
-        private void DrawCopyListElement(Rect rect, int index, bool isActive, bool isFocused)
+        private void DrawPreBuildCopyListElement(Rect rect, int index, bool isActive, bool isFocused)
         {
-            rect = EZEditorGUIUtility.DrawReorderableListIndex(rect, index, copyList);
+            rect = EZEditorGUIUtility.DrawReorderableListIndex(rect, index, preBuildCopyList);
             rect.y += 1; rect.height = EditorGUIUtility.singleLineHeight;
 
-            SerializedProperty m_CopyInfo = m_CopyList.GetArrayElementAtIndex(index);
+            SerializedProperty m_CopyInfo = m_PreBuildCopyList.GetArrayElementAtIndex(index);
             SerializedProperty m_DestDirPath = m_CopyInfo.FindPropertyRelative("dstPath");
             SerializedProperty m_SrcDirPath = m_CopyInfo.FindPropertyRelative("srcPath");
 
@@ -243,12 +193,6 @@ namespace EZhex1991.EZEditorTools.Build
             EZEditorGUIUtility.DrawFolderPathField(new Rect(rect.x, rect.y, width + residue * 7 - margin, rect.height), m_SrcDirPath);
         }
 
-        private void DrawAssetBundleManager()
-        {
-            EditorGUILayout.PropertyField(m_ShowAssets);
-            EditorGUILayout.PropertyField(m_ShowDependencies);
-            EZBundleManager.DrawAssetBundleManager((AssetsViewOption)m_ShowAssets.enumValueIndex, (BundleDependenciesViewOption)m_ShowDependencies.enumValueIndex);
-        }
     }
 }
 

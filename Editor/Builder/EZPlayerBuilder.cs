@@ -56,33 +56,33 @@ namespace EZhex1991.EZEditorTools.Build
             }
         }
 
-        public const string Wildcard_Date = "<Date>";
-        public const string Wildcard_Time = "<Time>";
-        public const string Wildcard_CompanyName = "<CompanyName>";
-        public const string Wildcard_ProductName = "<ProductName>";
-        public const string Wildcard_BundleIdentifier = "<BundleIdentifier>";
-        public const string Wildcard_BundleVersion = "<BundleVersion>";
-        public const string Wildcard_BuildNumber = "<BuildNumber>";
-        public const string Wildcard_BuildTarget = "<BuildTarget>";
+        public const string Placeholder_Date = "<Date>";
+        public const string Placeholder_Time = "<Time>";
+        public const string Placeholder_CompanyName = "<CompanyName>";
+        public const string Placeholder_ProductName = "<ProductName>";
+        public const string Placeholder_BundleIdentifier = "<BundleIdentifier>";
+        public const string Placeholder_BundleVersion = "<BundleVersion>";
+        public const string Placeholder_BuildNumber = "<BuildNumber>";
+        public const string Placeholder_BuildTarget = "<BuildTarget>";
 
         public BuildTarget buildTarget = BuildTarget.NoTarget;
         public BuildOptions buildOptions = BuildOptions.ShowBuiltPlayer;
 
         public EZBundleBuilder bundleBuilder;
 
-        public string outputPath = "Builds/Players/<BuildTarget>/<ProductName>-<BundleVersion>";
+        public string outputDirectory = "Builds/Players";
+        public string outputPattern = "<BuildTarget>/<ProductName>-<BundleVersion>";
         public string exeFileName = "<ProductName>-<BundleVersion>";
         public SceneAsset[] scenes;
 
         public string companyName;
         public string productName;
         public string bundleIdentifier;
-        public string bundleVersion = "1.0.0.<BuildNumber>";
+        public string bundleVersion = "1.0.0";
         public int buildNumber;
-        public bool buildNumberIncrement = true;
         public Texture2D icon;
 
-        public EZCopyList copyList;
+        public EZCopyList postBuildCopyList;
 
         public bool CheckTarget(BuildTargetGroup buildGroup)
         {
@@ -110,7 +110,7 @@ namespace EZhex1991.EZEditorTools.Build
             }
             if (!string.IsNullOrEmpty(bundleVersion))
             {
-                PlayerSettings.bundleVersion = GetBundleVersion();
+                PlayerSettings.bundleVersion = bundleVersion;
             }
 
             if (icon != null)
@@ -183,10 +183,10 @@ namespace EZhex1991.EZEditorTools.Build
             BuildTargetGroup buildGroup = GetGroup(buildTarget);
             if (!CheckTarget(buildGroup)) return;
 
-            if (string.IsNullOrEmpty(outputPath))
+            if (string.IsNullOrEmpty(outputDirectory))
             {
-                outputPath = EditorUtility.SaveFolderPanel("Choose Output Folder", "", "");
-                if (string.IsNullOrEmpty(outputPath)) return;
+                outputDirectory = EditorUtility.SaveFolderPanel("Choose Output Folder", "", "");
+                if (string.IsNullOrEmpty(outputDirectory)) return;
             }
             string path = GetOutputPath();
 
@@ -208,49 +208,49 @@ namespace EZhex1991.EZEditorTools.Build
                     break;
                 case BuildResult.Succeeded:
                     Debug.Log("Build Succeeded");
-                    copyList.CopyFiles(path);
+                    postBuildCopyList.CopyFiles(path);
                     break;
             }
             File.WriteAllText(projectSettingsPath, oldSettings);
 
-            if (buildNumberIncrement)
-            {
-                buildNumber++;
-                EditorUtility.SetDirty(this);
-            }
         }
 
-        public string HandleWildcards(string text)
+        public string HandlePlaceholders(string text)
         {
-            return HandleWildcards(text, buildTarget);
+            return HandlePlaceholders(text, buildTarget);
         }
-        public string HandleWildcards(string text, BuildTarget target)
+        public string HandlePlaceholders(string text, BuildTarget target)
         {
-            return text
-                .Replace(Wildcard_BuildTarget, GetTargetName(target))
-                .Replace(Wildcard_BundleIdentifier, bundleIdentifier)
-                // BundleVersion could contains BuildNumber wildcard
-                .Replace(Wildcard_BundleVersion, bundleVersion).Replace(Wildcard_BuildNumber, buildNumber.ToString())
-                .Replace(Wildcard_CompanyName, companyName)
-                .Replace(Wildcard_Date, DateTime.Now.ToString("yyyyMMdd"))
-                .Replace(Wildcard_ProductName, productName)
-                .Replace(Wildcard_Time, DateTime.Now.ToString("HHmmss"));
+            return EZBuilderPathUtility.ResolvePlaceholders(
+                text,
+                buildTarget: GetTargetName(target),
+                buildNumber: buildNumber.ToString(),
+                companyName: companyName,
+                productName: productName,
+                bundleIdentifier: bundleIdentifier,
+                bundleVersion: bundleVersion,
+                date: DateTime.Now.ToString("yyyyMMdd"),
+                time: DateTime.Now.ToString("HHmmss"));
         }
         public string GetOutputPath()
         {
-            return HandleWildcards(outputPath);
+            return EZBuilderPathUtility.CombinePath(outputDirectory, GetOutputPattern(buildTarget));
         }
         public string GetOutputPath(BuildTarget target)
         {
-            return HandleWildcards(outputPath, target);
+            return EZBuilderPathUtility.CombinePath(outputDirectory, GetOutputPattern(target));
+        }
+        public string GetOutputPattern(BuildTarget target)
+        {
+            return HandlePlaceholders(outputPattern, target);
         }
         public string GetExeFileName()
         {
-            return HandleWildcards(exeFileName);
+            return HandlePlaceholders(exeFileName);
         }
-        public string GetBundleVersion()
+        public string GetExeFileName(BuildTarget target)
         {
-            return bundleVersion.Replace(Wildcard_BuildNumber, buildNumber.ToString());
+            return HandlePlaceholders(exeFileName, target);
         }
     }
 }

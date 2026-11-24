@@ -3,7 +3,6 @@
  * Organization:    #ORGANIZATION#
  * Description:     
  */
-using System.IO;
 using UnityEditor;
 using UnityEngine;
 
@@ -19,7 +18,8 @@ namespace EZhex1991.EZEditorTools.Build
 
         protected SerializedProperty m_BundleBuilder;
 
-        protected SerializedProperty m_OutputPath;
+        protected SerializedProperty m_OutputDirectory;
+        protected SerializedProperty m_OutputPattern;
         protected SerializedProperty m_ExeFileName;
         protected SerializedProperty m_Scenes;
 
@@ -28,19 +28,15 @@ namespace EZhex1991.EZEditorTools.Build
         protected SerializedProperty m_BundleIdentifier;
         protected SerializedProperty m_BundleVersion;
         protected SerializedProperty m_BuildNumber;
-        protected SerializedProperty m_BuildNumberIncrement;
         protected SerializedProperty m_Icon;
 
-        protected SerializedProperty m_CopyList;
-
-        private string bundleVersion;
+        protected SerializedProperty m_PostBuildCopyList;
 
         public static class Styles
         {
-            public static string Tooltip_Wildcards = "Wildcards: <Date>|<Time>|<CompanyName>|<ProductName>|<BundleIdentifier>|<BundleVersion>|<BuildNumber>|<BuildTarget>";
-            public static GUIContent Label_BuildNumberIncrement = new GUIContent("Increment", "buildNumber will increase automatically after a successful build.");
-            public static GUIContent Label_OutputPath = new GUIContent("Output Path", Tooltip_Wildcards);
-            public static GUIContent Label_ExeFileName = new GUIContent("EXE File Name", Tooltip_Wildcards);
+            public static string Tooltip_Placeholders = "Supported Path Variables: <Date>|<Time>|<CompanyName>|<ProductName>|<BundleIdentifier>|<BundleVersion>|<BuildNumber>|<BuildTarget>";
+            public static GUIContent Label_OutputPattern = new GUIContent("Output Pattern", Tooltip_Placeholders);
+            public static GUIContent Label_ExeFileName = new GUIContent("EXE File Name", Tooltip_Placeholders);
         }
 
         protected void OnEnable()
@@ -49,7 +45,8 @@ namespace EZhex1991.EZEditorTools.Build
             m_BuildTarget = serializedObject.FindProperty("buildTarget");
             m_BuildOptions = serializedObject.FindProperty("buildOptions");
             m_BundleBuilder = serializedObject.FindProperty("bundleBuilder");
-            m_OutputPath = serializedObject.FindProperty("outputPath");
+            m_OutputDirectory = serializedObject.FindProperty("outputDirectory");
+            m_OutputPattern = serializedObject.FindProperty("outputPattern");
             m_ExeFileName = serializedObject.FindProperty("exeFileName");
             m_Scenes = serializedObject.FindProperty("scenes");
             m_CompanyName = serializedObject.FindProperty("companyName");
@@ -57,12 +54,10 @@ namespace EZhex1991.EZEditorTools.Build
             m_BundleIdentifier = serializedObject.FindProperty("bundleIdentifier");
             m_BundleVersion = serializedObject.FindProperty("bundleVersion");
             m_BuildNumber = serializedObject.FindProperty("buildNumber");
-            m_BuildNumberIncrement = serializedObject.FindProperty("buildNumberIncrement");
             m_Icon = serializedObject.FindProperty("icon");
 
-            m_CopyList = serializedObject.FindProperty("copyList");
+            m_PostBuildCopyList = serializedObject.FindProperty("postBuildCopyList");
 
-            bundleVersion = playerBuilder.GetBundleVersion();
         }
 
         public override void OnInspectorGUI()
@@ -84,48 +79,20 @@ namespace EZhex1991.EZEditorTools.Build
                 }
                 EditorGUI.EndDisabledGroup();
                 EditorGUILayout.Space();
-                DrawQuickBuildButtons();
+                EZBuilderGUIUtility.DrawQuickBuildButtons(QuickBuild);
                 EditorGUILayout.Space();
             }
 
+            OutputGUI();
+            EditorGUILayout.Space();
             BuildOptionsGUI();
             EditorGUILayout.Space();
             PlayerSettingsGUI();
             EditorGUILayout.Space();
-            EditorGUILayout.PropertyField(m_CopyList);
+            EditorGUILayout.PropertyField(m_PostBuildCopyList);
 
             serializedObject.ApplyModifiedProperties();
         }
-        private void DrawQuickBuildButtons()
-        {
-            EditorGUILayout.LabelField("Quick Build", EditorStyles.boldLabel);
-            DrawQuickBuildButtonRow(
-                new string[] { "Android", "iOS" },
-                new BuildTarget[] { BuildTarget.Android, BuildTarget.iOS });
-            DrawQuickBuildButtonRow(
-                new string[] { "Win32", "Win64", "OSX" },
-                new BuildTarget[] { BuildTarget.StandaloneWindows, BuildTarget.StandaloneWindows64, BuildTarget.StandaloneOSX });
-            DrawQuickBuildButtonRow(
-                new string[] { "WebGL" },
-                new BuildTarget[] { BuildTarget.WebGL });
-        }
-
-        private void DrawQuickBuildButtonRow(string[] labels, BuildTarget[] buildTargets)
-        {
-            Rect rowRect = EditorGUILayout.GetControlRect(false, EditorGUIUtility.singleLineHeight);
-            const float buttonSpacing = 2f;
-            float buttonWidth = (rowRect.width - buttonSpacing * (labels.Length - 1)) / labels.Length;
-            for (int i = 0; i < labels.Length; i++)
-            {
-                int index = i;
-                Rect buttonRect = new Rect(rowRect.x + (buttonWidth + buttonSpacing) * i, rowRect.y, buttonWidth, rowRect.height);
-                if (GUI.Button(buttonRect, labels[i]))
-                {
-                    QuickBuild(buildTargets[index]);
-                }
-            }
-        }
-
         private void QuickBuild(BuildTarget buildTarget)
         {
             m_BuildTarget.intValue = (int)buildTarget;
@@ -138,58 +105,61 @@ namespace EZhex1991.EZEditorTools.Build
         {
             EditorGUILayout.LabelField("Build Options", EditorStyles.boldLabel);
             m_BuildOptions.intValue = (int)(BuildOptions)EditorGUILayout.EnumFlagsField("Build Options", (BuildOptions)m_BuildOptions.intValue);
-            {
-                EditorGUILayout.BeginHorizontal();
-                EditorGUI.BeginChangeCheck();
-                EditorGUILayout.PropertyField(m_OutputPath, Styles.Label_OutputPath);
-                if (GUILayout.Button("...", EditorStyles.miniButton, new GUILayoutOption[] { GUILayout.Width(30) }))
-                {
-                    string path = EditorUtility.SaveFolderPanel("Choose Output Folder", "", "");
-                    if (!string.IsNullOrEmpty(path)) m_OutputPath.stringValue = path;
-                }
-                if (EditorGUI.EndChangeCheck())
-                {
-                    serializedObject.ApplyModifiedProperties();
-                }
-                EditorGUILayout.EndHorizontal();
-                DrawOutputPathInfo();
-                EditorGUILayout.PropertyField(m_ExeFileName, Styles.Label_ExeFileName);
-            }
             EditorGUILayout.PropertyField(m_BundleBuilder);
             EditorGUILayout.PropertyField(m_Scenes, true);
         }
 
-        private void DrawOutputPathInfo()
+        private void OutputGUI()
         {
-            BuildTarget previewTarget = (BuildTarget)m_BuildTarget.intValue;
-            if (previewTarget == BuildTarget.NoTarget)
-            {
-                previewTarget = EditorUserBuildSettings.activeBuildTarget;
-            }
+            EditorGUILayout.LabelField("Output", EditorStyles.boldLabel);
+            DrawOutputDirectory();
+            DrawOutputDirectoryPreview();
+            EditorGUILayout.PropertyField(m_OutputPattern, Styles.Label_OutputPattern);
+            DrawOutputPatternPreview();
+            EditorGUILayout.PropertyField(m_ExeFileName, Styles.Label_ExeFileName);
+            DrawExeFileNamePreview();
+        }
 
-            string fullPath = GetFullPath(playerBuilder.GetOutputPath(previewTarget));
+        private void DrawOutputDirectory()
+        {
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.PrefixLabel("Output Directory");
+            EZEditorGUIUtility.DrawFolderPathField(EditorGUILayout.GetControlRect(), m_OutputDirectory);
+            EditorGUILayout.EndHorizontal();
+        }
+
+        private void DrawOutputDirectoryPreview()
+        {
+            string fullPath = EZBuilderPathUtility.GetFullPath(m_OutputDirectory.stringValue);
             EditorGUI.indentLevel++;
             EditorGUILayout.BeginHorizontal();
             EditorGUILayout.LabelField(fullPath);
-            EditorGUI.BeginDisabledGroup(string.IsNullOrEmpty(fullPath));
+            EditorGUI.BeginDisabledGroup(string.IsNullOrEmpty(m_OutputDirectory.stringValue));
             if (GUILayout.Button("Open", GUILayout.Width(50)))
             {
-                if (!Directory.Exists(fullPath)) Directory.CreateDirectory(fullPath);
-                EditorUtility.RevealInFinder(fullPath);
+                EZBuilderPathUtility.OpenFolder(m_OutputDirectory.stringValue);
             }
             EditorGUI.EndDisabledGroup();
             EditorGUILayout.EndHorizontal();
             EditorGUI.indentLevel--;
         }
 
-        private static string GetFullPath(string path)
+        private void DrawOutputPatternPreview()
         {
-            if (string.IsNullOrEmpty(path)) return string.Empty;
-            if (Path.IsPathRooted(path)) return Path.GetFullPath(path);
-
-            string projectPath = Directory.GetParent(Application.dataPath).FullName;
-            return Path.GetFullPath(Path.Combine(projectPath, path));
+            BuildTarget previewTarget = EZBuilderPathUtility.GetPreviewTarget((BuildTarget)m_BuildTarget.intValue);
+            EditorGUI.indentLevel++;
+            EditorGUILayout.LabelField(playerBuilder.GetOutputPattern(previewTarget));
+            EditorGUI.indentLevel--;
         }
+
+        private void DrawExeFileNamePreview()
+        {
+            BuildTarget previewTarget = EZBuilderPathUtility.GetPreviewTarget((BuildTarget)m_BuildTarget.intValue);
+            EditorGUI.indentLevel++;
+            EditorGUILayout.LabelField(playerBuilder.GetExeFileName(previewTarget));
+            EditorGUI.indentLevel--;
+        }
+
         private void PlayerSettingsGUI()
         {
             EditorGUILayout.LabelField("Player Settings", EditorStyles.boldLabel);
@@ -197,22 +167,8 @@ namespace EZhex1991.EZEditorTools.Build
             EditorGUILayout.PropertyField(m_ProductName);
             EditorGUILayout.PropertyField(m_BundleIdentifier);
 
-            EditorGUI.BeginChangeCheck();
-            EditorGUILayout.BeginHorizontal();
-            EditorGUILayout.PropertyField(m_BuildNumber);
-            if (GUILayout.Button("+", EditorStyles.miniButton, new GUILayoutOption[] { GUILayout.Width(30) }))
-            {
-                m_BuildNumber.intValue++;
-            }
-            EditorGUILayout.EndHorizontal();
-            EditorGUILayout.PropertyField(m_BuildNumberIncrement, Styles.Label_BuildNumberIncrement);
+            EZEditorGUIUtility.DrawBuildNumberField(m_BuildNumber);
             EditorGUILayout.PropertyField(m_BundleVersion);
-            if (EditorGUI.EndChangeCheck())
-            {
-                serializedObject.ApplyModifiedProperties();
-                bundleVersion = playerBuilder.GetBundleVersion();
-            }
-            EditorGUILayout.HelpBox(bundleVersion, MessageType.Info);
 
             EditorGUILayout.PropertyField(m_Icon);
             if (GUILayout.Button("Apply Player Settings"))

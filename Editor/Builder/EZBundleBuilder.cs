@@ -33,17 +33,14 @@ namespace EZhex1991.EZEditorTools.Build
 
         public BuildTarget buildTarget = BuildTarget.NoTarget;
         public BuildAssetBundleOptions buildOptions = BuildAssetBundleOptions.DeterministicAssetBundle;
-        public string outputPath = "Builds/AssetBundles/<BuildTarget>";
+        public int buildNumber;
+        public string outputDirectory = "Builds/AssetBundles";
+        public string outputPattern = "<BuildTarget>-<BuildNumber>";
         public string listFileName = "files.txt";
-        public bool managerMode = false;
         public bool forceRebuild = false;
 
-        public CopyInfo[] copyList;
+        public CopyInfo[] preBuildCopyList;
         public BundleInfo[] bundleList;
-
-        // view options
-        public AssetsViewOption showAssets = AssetsViewOption.Object;
-        public BundleDependenciesViewOption showDependencies = BundleDependenciesViewOption.Recursive;
 
         public void Execute(BuildTarget buildTarget)
         {
@@ -52,18 +49,10 @@ namespace EZhex1991.EZEditorTools.Build
             if (forceRebuild && Directory.Exists(buildPath)) Directory.Delete(buildPath, true);
             Directory.CreateDirectory(buildPath);
             AssetDatabase.Refresh();
-            CopyFiles();
+            CopyPreBuildFiles();
 
             AssetDatabase.Refresh();
-            AssetBundleManifest manifest;
-            if (managerMode)
-            {
-                manifest = BuildPipeline.BuildAssetBundles(buildPath, buildOptions, buildTarget);
-            }
-            else
-            {
-                manifest = BuildPipeline.BuildAssetBundles(buildPath, GetBuildList(), buildOptions, buildTarget);
-            }
+            AssetBundleManifest manifest = BuildPipeline.BuildAssetBundles(buildPath, GetBuildList(), buildOptions, buildTarget);
             OnPostBuild(manifest);
             if (!string.IsNullOrEmpty(listFileName)) CreateFileList(buildPath, listFileName);
             AssetDatabase.Refresh();
@@ -73,7 +62,15 @@ namespace EZhex1991.EZEditorTools.Build
 
         public string GetOutputPath(BuildTarget buildTarget)
         {
-            return outputPath.Replace("<BuildTarget>", EZPlayerBuilder.GetTargetName(buildTarget));
+            return EZBuilderPathUtility.CombinePath(outputDirectory, GetOutputPattern(buildTarget));
+        }
+
+        public string GetOutputPattern(BuildTarget buildTarget)
+        {
+            return EZBuilderPathUtility.ResolvePlaceholders(
+                outputPattern,
+                buildTarget: EZBuilderPathUtility.GetTargetName(buildTarget),
+                buildNumber: buildNumber.ToString());
         }
 
         protected void OnPreBuild()
@@ -107,13 +104,13 @@ namespace EZhex1991.EZEditorTools.Build
             }
         }
 
-        protected void CopyFiles()
+        protected void CopyPreBuildFiles()
         {
-            for (int i = 0; i < copyList.Length; i++)
+            for (int i = 0; i < preBuildCopyList.Length; i++)
             {
-                EditorUtility.DisplayProgressBar("Copying Files", "", (float)i / copyList.Length);
-                string src = copyList[i].srcPath;
-                string dst = copyList[i].dstPath;
+                EditorUtility.DisplayProgressBar("Pre-build Copy", "", (float)i / preBuildCopyList.Length);
+                string src = preBuildCopyList[i].srcPath;
+                string dst = preBuildCopyList[i].dstPath;
                 if (string.IsNullOrEmpty(src) || string.IsNullOrEmpty(dst)) continue;
                 if (File.Exists(src))
                 {
