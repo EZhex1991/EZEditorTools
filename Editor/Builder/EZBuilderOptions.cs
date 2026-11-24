@@ -22,14 +22,6 @@ namespace EZhex1991.EZEditorTools.Build
     }
 
     [Serializable]
-    public class CopyInfo
-    {
-        [UnityEngine.Serialization.FormerlySerializedAs("destDirPath")]
-        public string dstPath = "";
-        [UnityEngine.Serialization.FormerlySerializedAs("sourDirPath")]
-        public string srcPath = "";
-    }
-    [Serializable]
     public class BundleInfo
     {
         public string bundleName = "";

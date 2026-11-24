@@ -73,16 +73,6 @@ namespace EZhex1991.EZEditorTools.Build
             return Path.GetFullPath(Path.Combine(GetProjectPath(), path));
         }
 
-        public static string GetDisplayPath(string path)
-        {
-            if (string.IsNullOrEmpty(path)) return string.Empty;
-            if (path.Contains("<") || path.Contains(">"))
-            {
-                return (GetProjectPath() + Path.DirectorySeparatorChar + path).Replace('\\', '/');
-            }
-            return GetFullPath(path);
-        }
-
         private static string GetProjectPath()
         {
             return Directory.GetParent(UnityEngine.Application.dataPath).FullName;

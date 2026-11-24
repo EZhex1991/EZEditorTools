@@ -39,7 +39,7 @@ namespace EZhex1991.EZEditorTools.Build
         public string listFileName = "files.txt";
         public bool forceRebuild = false;
 
-        public CopyInfo[] preBuildCopyList;
+        public EZCopyPath[] preBuildCopyList;
         public BundleInfo[] bundleList;
 
         public void Execute(BuildTarget buildTarget)
@@ -109,8 +109,8 @@ namespace EZhex1991.EZEditorTools.Build
             for (int i = 0; i < preBuildCopyList.Length; i++)
             {
                 EditorUtility.DisplayProgressBar("Pre-build Copy", "", (float)i / preBuildCopyList.Length);
-                string src = preBuildCopyList[i].srcPath;
-                string dst = preBuildCopyList[i].dstPath;
+                string src = preBuildCopyList[i].sourcePath;
+                string dst = preBuildCopyList[i].destinationPath;
                 if (string.IsNullOrEmpty(src) || string.IsNullOrEmpty(dst)) continue;
                 if (File.Exists(src))
                 {

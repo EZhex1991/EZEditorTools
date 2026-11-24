@@ -35,36 +35,6 @@ namespace EZhex1991.EZEditorTools.Build
                 default: return BuildTargetGroup.Unknown;
             }
         }
-        public static string GetTargetName(BuildTarget buildTarget)
-        {
-            switch (buildTarget)
-            {
-                case BuildTarget.NoTarget: return "NoTarget";
-                case BuildTarget.StandaloneOSX: return "OSX";
-                case BuildTarget.StandaloneWindows: return "Win";
-                case BuildTarget.StandaloneWindows64: return "Win64";
-                case BuildTarget.StandaloneLinux64: return "Linux64";
-                case BuildTarget.iOS: return "iOS";
-                case BuildTarget.Android: return "Android";
-                case BuildTarget.WebGL: return "WebGL";
-                case BuildTarget.WSAPlayer: return "WSA";
-                case BuildTarget.PS4: return "PS4";
-                case BuildTarget.XboxOne: return "Xbox";
-                case BuildTarget.tvOS: return "tvOS";
-                case BuildTarget.Switch: return "Switch";
-                default: return "Unknown";
-            }
-        }
-
-        public const string Placeholder_Date = "<Date>";
-        public const string Placeholder_Time = "<Time>";
-        public const string Placeholder_CompanyName = "<CompanyName>";
-        public const string Placeholder_ProductName = "<ProductName>";
-        public const string Placeholder_BundleIdentifier = "<BundleIdentifier>";
-        public const string Placeholder_BundleVersion = "<BundleVersion>";
-        public const string Placeholder_BuildNumber = "<BuildNumber>";
-        public const string Placeholder_BuildTarget = "<BuildTarget>";
-
         public BuildTarget buildTarget = BuildTarget.NoTarget;
         public BuildOptions buildOptions = BuildOptions.ShowBuiltPlayer;
 
@@ -223,7 +193,7 @@ namespace EZhex1991.EZEditorTools.Build
         {
             return EZBuilderPathUtility.ResolvePlaceholders(
                 text,
-                buildTarget: GetTargetName(target),
+                buildTarget: EZBuilderPathUtility.GetTargetName(target),
                 buildNumber: buildNumber.ToString(),
                 companyName: companyName,
                 productName: productName,
@@ -235,10 +205,6 @@ namespace EZhex1991.EZEditorTools.Build
         public string GetOutputPath()
         {
             return EZBuilderPathUtility.CombinePath(outputDirectory, GetOutputPattern(buildTarget));
-        }
-        public string GetOutputPath(BuildTarget target)
-        {
-            return EZBuilderPathUtility.CombinePath(outputDirectory, GetOutputPattern(target));
         }
         public string GetOutputPattern(BuildTarget target)
         {

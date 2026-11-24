@@ -3,7 +3,6 @@
  * Organization:    #ORGANIZATION#
  * Description:     
  */
-using System.IO;
 using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
@@ -25,7 +24,7 @@ namespace EZhex1991.EZEditorTools.Build
         private SerializedProperty m_PreBuildCopyList;
         private SerializedProperty m_BundleList;
 
-        private ReorderableList preBuildCopyList;
+        private EZCopyPathListGUI preBuildCopyListGUI;
         private ReorderableList bundleList;
 
         void OnEnable()
@@ -40,11 +39,7 @@ namespace EZhex1991.EZEditorTools.Build
             m_ForceRebuild = serializedObject.FindProperty("forceRebuild");
             m_PreBuildCopyList = serializedObject.FindProperty("preBuildCopyList");
             m_BundleList = serializedObject.FindProperty("bundleList");
-            preBuildCopyList = new ReorderableList(serializedObject, m_PreBuildCopyList, true, true, true, true)
-            {
-                drawHeaderCallback = DrawPreBuildCopyListHeader,
-                drawElementCallback = DrawPreBuildCopyListElement
-            };
+            preBuildCopyListGUI = new EZCopyPathListGUI(serializedObject, m_PreBuildCopyList, "Source Path", "Destination Path");
             bundleList = new ReorderableList(serializedObject, m_BundleList, true, true, true, true)
             {
                 drawHeaderCallback = DrawBundleListHeader,
@@ -79,7 +74,7 @@ namespace EZhex1991.EZEditorTools.Build
             EditorGUILayout.LabelField("Build Options", EditorStyles.boldLabel);
             DrawBuildOptions();
 
-            EZEditorGUIUtility.DoLayoutReorderableList(preBuildCopyList, "Pre-build Copy");
+            preBuildCopyListGUI.DoLayoutList("Pre-build Copy");
 
             EZEditorGUIUtility.DoLayoutReorderableList(bundleList);
 
@@ -132,30 +127,6 @@ namespace EZhex1991.EZEditorTools.Build
             EditorGUI.indentLevel++;
             EditorGUILayout.LabelField(bundleBuilder.GetOutputPattern(previewTarget));
             EditorGUI.indentLevel--;
-        }
-
-        private void DrawPreBuildCopyListHeader(Rect rect)
-        {
-            rect = EZEditorGUIUtility.CalcReorderableListHeaderRect(rect, preBuildCopyList);
-            rect.y += 1;
-            float width = rect.width / 2; float margin = 5;
-            EditorGUI.LabelField(new Rect(rect.x, rect.y, width - margin, rect.height), "Destination Path");
-            rect.x += width;
-            EditorGUI.LabelField(new Rect(rect.x, rect.y, width - margin, rect.height), "Source Path");
-        }
-        private void DrawPreBuildCopyListElement(Rect rect, int index, bool isActive, bool isFocused)
-        {
-            rect = EZEditorGUIUtility.DrawReorderableListIndex(rect, index, preBuildCopyList);
-            rect.y += 1; rect.height = EditorGUIUtility.singleLineHeight;
-
-            SerializedProperty m_CopyInfo = m_PreBuildCopyList.GetArrayElementAtIndex(index);
-            SerializedProperty m_DestDirPath = m_CopyInfo.FindPropertyRelative("dstPath");
-            SerializedProperty m_SrcDirPath = m_CopyInfo.FindPropertyRelative("srcPath");
-
-            float width = rect.width / 2; float margin = 5;
-            EditorGUI.PropertyField(new Rect(rect.x, rect.y, width - margin, rect.height), m_DestDirPath, GUIContent.none);
-            rect.x += width;
-            EditorGUI.PropertyField(new Rect(rect.x, rect.y, width - margin, rect.height), m_SrcDirPath, GUIContent.none);
         }
 
         private void DrawBundleListHeader(Rect rect)
