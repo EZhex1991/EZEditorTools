@@ -159,7 +159,7 @@ namespace EZhex1991.EZEditorTools.Build
 
             if (m_Directory.objectReferenceValue != null && string.IsNullOrEmpty(m_BundleName.stringValue))
             {
-                m_BundleName.stringValue = AssetDatabase.GetAssetPath(m_Directory.objectReferenceValue);
+                m_BundleName.stringValue = EZBundleBuilder.GetDefaultBundleName(AssetDatabase.GetAssetPath(m_Directory.objectReferenceValue));
             }
 
             float width = Mathf.Min(100, rect.width / 4); float residue = (rect.width - width * 4) / 10; float margin = 5;
@@ -209,7 +209,7 @@ namespace EZhex1991.EZEditorTools.Build
             for (int i = 0; i < directories.Length; i++)
             {
                 SerializedProperty bundleInfo = m_BundleList.GetArrayElementAtIndex(startIndex + i);
-                bundleInfo.FindPropertyRelative("bundleName").stringValue = AssetDatabase.GetAssetPath(directories[i]);
+                bundleInfo.FindPropertyRelative("bundleName").stringValue = EZBundleBuilder.GetDefaultBundleName(AssetDatabase.GetAssetPath(directories[i]));
                 bundleInfo.FindPropertyRelative("filePattern").stringValue = "*.*";
                 bundleInfo.FindPropertyRelative("buildMode").enumValueIndex = (int)BundleBuildMode.Single;
                 bundleInfo.FindPropertyRelative("directory").objectReferenceValue = directories[i];

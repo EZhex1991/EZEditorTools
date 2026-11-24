@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.0] - 2026-11-24
+
+### Changed
+
+- Bundle names now default to the selected folder name instead of the full `Assets` path.
+- Split Bundle names are generated from folder names with underscores replacing path separators.
+
 ## [1.2.0] - 2026-11-24
 
 ### Added

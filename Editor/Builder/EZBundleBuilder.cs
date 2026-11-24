@@ -123,7 +123,7 @@ namespace EZhex1991.EZEditorTools.Build
                 if (!AssetDatabase.IsValidFolder(rootPath)) continue;
 
                 string bundleName = string.IsNullOrEmpty(bundleInfo.bundleName)
-                    ? rootPath
+                    ? GetDefaultBundleName(rootPath)
                     : bundleInfo.bundleName;
                 switch (bundleInfo.buildMode)
                 {
@@ -146,6 +146,13 @@ namespace EZhex1991.EZEditorTools.Build
                 }
             }
             return buildList.ToArray();
+        }
+
+        public static string GetDefaultBundleName(string folderPath)
+        {
+            folderPath = folderPath.Replace('\\', '/').TrimEnd('/');
+            int separatorIndex = folderPath.LastIndexOf('/');
+            return separatorIndex >= 0 ? folderPath.Substring(separatorIndex + 1) : folderPath;
         }
 
         private static void AddBuild(List<AssetBundleBuild> buildList, string bundleName, string directory, string filePattern, SearchOption searchOption)
