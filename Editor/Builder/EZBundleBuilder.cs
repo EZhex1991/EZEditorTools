@@ -33,7 +33,7 @@ namespace EZhex1991.EZEditorTools.Build
 
         public BuildTarget buildTarget = BuildTarget.NoTarget;
         public BuildAssetBundleOptions buildOptions = BuildAssetBundleOptions.DeterministicAssetBundle;
-        public string outputPath = "Assets/StreamingAssets";
+        public string outputPath = "Builds/AssetBundles/<BuildTarget>";
         public string listFileName = "files.txt";
         public bool managerMode = false;
         public bool forceRebuild = false;
@@ -47,9 +47,10 @@ namespace EZhex1991.EZEditorTools.Build
 
         public void Execute(BuildTarget buildTarget)
         {
+            string buildPath = GetOutputPath(buildTarget);
             OnPreBuild();
-            if (forceRebuild && Directory.Exists(outputPath)) Directory.Delete(outputPath, true);
-            Directory.CreateDirectory(outputPath);
+            if (forceRebuild && Directory.Exists(buildPath)) Directory.Delete(buildPath, true);
+            Directory.CreateDirectory(buildPath);
             AssetDatabase.Refresh();
             CopyFiles();
 
@@ -57,17 +58,22 @@ namespace EZhex1991.EZEditorTools.Build
             AssetBundleManifest manifest;
             if (managerMode)
             {
-                manifest = BuildPipeline.BuildAssetBundles(outputPath, buildOptions, buildTarget);
+                manifest = BuildPipeline.BuildAssetBundles(buildPath, buildOptions, buildTarget);
             }
             else
             {
-                manifest = BuildPipeline.BuildAssetBundles(outputPath, GetBuildList(), buildOptions, buildTarget);
+                manifest = BuildPipeline.BuildAssetBundles(buildPath, GetBuildList(), buildOptions, buildTarget);
             }
             OnPostBuild(manifest);
-            if (!string.IsNullOrEmpty(listFileName)) CreateFileList(outputPath, listFileName);
+            if (!string.IsNullOrEmpty(listFileName)) CreateFileList(buildPath, listFileName);
             AssetDatabase.Refresh();
 
             Debug.Log("build complete.");
+        }
+
+        public string GetOutputPath(BuildTarget buildTarget)
+        {
+            return outputPath.Replace("<BuildTarget>", EZPlayerBuilder.GetTargetName(buildTarget));
         }
 
         protected void OnPreBuild()

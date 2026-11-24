@@ -142,16 +142,22 @@ namespace EZhex1991.EZEditorTools.Build
 
         private void DrawOutputPathInfo()
         {
-            string fullPath = GetFullPath(m_OutputPath.stringValue);
+            string fullPath = GetDisplayPath(m_OutputPath.stringValue);
+            BuildTarget previewTarget = (BuildTarget)m_BuildTarget.intValue;
+            if (previewTarget == BuildTarget.NoTarget)
+            {
+                previewTarget = EditorUserBuildSettings.activeBuildTarget;
+            }
+            string openPath = GetFullPath(bundleBuilder.GetOutputPath(previewTarget));
             EditorGUI.indentLevel++;
             EditorGUILayout.BeginHorizontal();
             Rect pathRect = GUILayoutUtility.GetRect(new GUIContent(fullPath), GUI.skin.label, GUILayout.ExpandWidth(true));
             EditorGUI.SelectableLabel(pathRect, fullPath, GUI.skin.label);
-            EditorGUI.BeginDisabledGroup(string.IsNullOrEmpty(fullPath));
+            EditorGUI.BeginDisabledGroup(string.IsNullOrEmpty(openPath));
             if (GUILayout.Button("Open", GUILayout.Width(50)))
             {
-                if (!Directory.Exists(fullPath)) Directory.CreateDirectory(fullPath);
-                EditorUtility.RevealInFinder(fullPath);
+                if (!Directory.Exists(openPath)) Directory.CreateDirectory(openPath);
+                EditorUtility.RevealInFinder(openPath);
             }
             EditorGUI.EndDisabledGroup();
             EditorGUILayout.EndHorizontal();
@@ -165,6 +171,17 @@ namespace EZhex1991.EZEditorTools.Build
 
             string projectPath = Directory.GetParent(Application.dataPath).FullName;
             return Path.GetFullPath(Path.Combine(projectPath, path));
+        }
+
+        private static string GetDisplayPath(string path)
+        {
+            if (string.IsNullOrEmpty(path)) return string.Empty;
+            if (path.Contains("<") || path.Contains(">"))
+            {
+                string projectPath = Directory.GetParent(Application.dataPath).FullName;
+                return (projectPath + Path.DirectorySeparatorChar + path).Replace('\\', '/');
+            }
+            return GetFullPath(path);
         }
 
         private void DrawCopyListHeader(Rect rect)

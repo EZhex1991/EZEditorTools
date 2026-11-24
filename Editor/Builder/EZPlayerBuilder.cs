@@ -70,7 +70,7 @@ namespace EZhex1991.EZEditorTools.Build
 
         public EZBundleBuilder bundleBuilder;
 
-        public string outputPath = "Builds/<BuildTarget>/<ProductName>-<BundleVersion>";
+        public string outputPath = "Builds/Players/<BuildTarget>/<ProductName>-<BundleVersion>";
         public string exeFileName = "<ProductName>-<BundleVersion>";
         public SceneAsset[] scenes;
 
