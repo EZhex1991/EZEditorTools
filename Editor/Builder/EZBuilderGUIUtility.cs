@@ -28,6 +28,10 @@ namespace EZhex1991.EZEditorTools.Build
         {
             EditorGUILayout.LabelField("Quick Build", EditorStyles.boldLabel);
             DrawQuickBuildButtonRow(
+                new string[] { "Current Platform" },
+                new BuildTarget[] { EditorUserBuildSettings.activeBuildTarget },
+                onBuild);
+            DrawQuickBuildButtonRow(
                 new string[] { "Android", "iOS" },
                 new BuildTarget[] { BuildTarget.Android, BuildTarget.iOS },
                 onBuild);

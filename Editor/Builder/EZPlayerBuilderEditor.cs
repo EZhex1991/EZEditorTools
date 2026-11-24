@@ -69,10 +69,11 @@ namespace EZhex1991.EZEditorTools.Build
 
             if (!serializedObject.isEditingMultipleObjects)
             {
+                EZBuilderGUIUtility.DrawQuickBuildButtons(QuickBuild);
+                EditorGUILayout.Space();
+
                 EditorGUILayout.LabelField("Build", EditorStyles.boldLabel);
-
                 EditorGUILayout.PropertyField(m_BuildTarget);
-
                 EditorGUI.BeginDisabledGroup((BuildTarget)m_BuildTarget.intValue == BuildTarget.NoTarget);
                 if (GUILayout.Button("Build"))
                 {
@@ -80,8 +81,6 @@ namespace EZhex1991.EZEditorTools.Build
                     GUIUtility.ExitGUI();
                 }
                 EditorGUI.EndDisabledGroup();
-                EditorGUILayout.Space();
-                EZBuilderGUIUtility.DrawQuickBuildButtons(QuickBuild);
                 EditorGUILayout.Space();
             }
 

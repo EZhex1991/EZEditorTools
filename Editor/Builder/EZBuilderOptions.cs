@@ -5,6 +5,7 @@
  */
 using System;
 using System.IO;
+using UnityEditor;
 
 namespace EZhex1991.EZEditorTools.Build
 {
@@ -27,7 +28,7 @@ namespace EZhex1991.EZEditorTools.Build
         public string bundleName = "";
         public string filePattern = "*.*";
         public SearchOption searchOption = SearchOption.AllDirectories;
-        public string dirPath = "";
+        public DefaultAsset directory;
     }
     [Serializable]
     public class FileInfo
@@ -35,6 +36,12 @@ namespace EZhex1991.EZEditorTools.Build
         public string fileName;
         public string md5;
         public int size;
+    }
+
+    [Serializable]
+    public class FileInfoCollection
+    {
+        public FileInfo[] files;
     }
 }
 

@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.1.0] - 2026-11-24
+
+### Added
+
+- Added a current platform button to the Bundle Builder and Player Builder quick build controls.
+- Added folder asset references for Bundle Builder bundle source directories.
+
+### Changed
+
+- Reordered Quick Build and Build controls in the Bundle Builder and Player Builder inspectors.
+- Changed Bundle Builder file list output from JSON Lines to `_files.json`.
+- Removed the configurable file list name and the copy to `Assets/Resources`.
+- Updated the package sample to use folder references for bundle sources.
+
 ## [1.0.3] - 2026-11-20
 
 ### Added

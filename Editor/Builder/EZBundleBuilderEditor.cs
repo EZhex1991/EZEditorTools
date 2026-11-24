@@ -19,7 +19,6 @@ namespace EZhex1991.EZEditorTools.Build
         private SerializedProperty m_BuildNumber;
         private SerializedProperty m_OutputDirectory;
         private SerializedProperty m_OutputPattern;
-        private SerializedProperty m_ListFileName;
         private SerializedProperty m_ForceRebuild;
         private SerializedProperty m_PreBuildCopyList;
         private SerializedProperty m_PostBuildCopyList;
@@ -35,7 +34,6 @@ namespace EZhex1991.EZEditorTools.Build
             m_BuildNumber = serializedObject.FindProperty("buildNumber");
             m_OutputDirectory = serializedObject.FindProperty("outputDirectory");
             m_OutputPattern = serializedObject.FindProperty("outputPattern");
-            m_ListFileName = serializedObject.FindProperty("listFileName");
             m_ForceRebuild = serializedObject.FindProperty("forceRebuild");
             m_PreBuildCopyList = serializedObject.FindProperty("preBuildCopyList");
             m_PostBuildCopyList = serializedObject.FindProperty("postBuildCopyList");
@@ -53,6 +51,10 @@ namespace EZhex1991.EZEditorTools.Build
 
             if (!serializedObject.isEditingMultipleObjects)
             {
+                EZBuilderGUIUtility.DrawQuickBuildButtons(
+                    target => EditorApplication.delayCall += delegate () { bundleBuilder.Execute(target); });
+                EditorGUILayout.Space();
+
                 EditorGUILayout.LabelField("Build", EditorStyles.boldLabel);
                 EditorGUILayout.PropertyField(m_BuildTarget);
                 EditorGUI.BeginDisabledGroup((BuildTarget)m_BuildTarget.intValue == BuildTarget.NoTarget);
@@ -61,9 +63,6 @@ namespace EZhex1991.EZEditorTools.Build
                     EditorApplication.delayCall += delegate () { bundleBuilder.Execute((BuildTarget)m_BuildTarget.intValue); };
                 }
                 EditorGUI.EndDisabledGroup();
-                EditorGUILayout.Space();
-                EZBuilderGUIUtility.DrawQuickBuildButtons(
-                    target => EditorApplication.delayCall += delegate () { bundleBuilder.Execute(target); });
                 EditorGUILayout.Space();
             }
 
@@ -97,7 +96,6 @@ namespace EZhex1991.EZEditorTools.Build
         {
             m_BuildOptions.intValue = (int)(BuildAssetBundleOptions)EditorGUILayout.EnumFlagsField("Build Options", (BuildAssetBundleOptions)m_BuildOptions.intValue);
             EZEditorGUIUtility.DrawBuildNumberField(m_BuildNumber);
-            EditorGUILayout.PropertyField(m_ListFileName);
             EditorGUILayout.PropertyField(m_ForceRebuild);
         }
 
@@ -156,7 +154,7 @@ namespace EZhex1991.EZEditorTools.Build
             SerializedProperty m_BundleName = m_BundleInfo.FindPropertyRelative("bundleName");
             SerializedProperty m_FilePattern = m_BundleInfo.FindPropertyRelative("filePattern");
             SerializedProperty m_SearchOption = m_BundleInfo.FindPropertyRelative("searchOption");
-            SerializedProperty m_SrcDirPath = m_BundleInfo.FindPropertyRelative("dirPath");
+            SerializedProperty m_Directory = m_BundleInfo.FindPropertyRelative("directory");
 
             float width = Mathf.Min(100, rect.width / 4); float residue = (rect.width - width * 4) / 10; float margin = 5;
             EditorGUI.PropertyField(new Rect(rect.x, rect.y, width + residue - margin, rect.height), m_BundleName, GUIContent.none);
@@ -165,7 +163,7 @@ namespace EZhex1991.EZEditorTools.Build
             rect.x += width + residue;
             EditorGUI.PropertyField(new Rect(rect.x, rect.y, width + residue - margin, rect.height), m_SearchOption, GUIContent.none);
             rect.x += width + residue;
-            EZEditorGUIUtility.DrawFolderPathField(new Rect(rect.x, rect.y, width + residue * 7 - margin, rect.height), m_SrcDirPath);
+            EditorGUI.PropertyField(new Rect(rect.x, rect.y, width + residue * 7 - margin, rect.height), m_Directory, GUIContent.none);
         }
 
     }

@@ -36,7 +36,6 @@ namespace EZhex1991.EZEditorTools.Build
         public int buildNumber;
         public string outputDirectory = "Builds/AssetBundles";
         public string outputPattern = "<BuildTarget>-<BuildNumber>";
-        public string listFileName = "files.txt";
         public bool forceRebuild = false;
 
         [EZNestedEditor]
@@ -60,7 +59,7 @@ namespace EZhex1991.EZEditorTools.Build
             AssetDatabase.Refresh();
             AssetBundleManifest manifest = BuildPipeline.BuildAssetBundles(buildPath, GetBuildList(), buildOptions, buildTarget);
             OnPostBuild(manifest);
-            if (!string.IsNullOrEmpty(listFileName)) CreateFileList(buildPath, listFileName);
+            CreateFileList(buildPath);
             AssetDatabase.Refresh();
             if (postBuildCopyList != null)
             {
@@ -121,7 +120,9 @@ namespace EZhex1991.EZEditorTools.Build
             {
                 if (bundleInfo.bundleName == "") continue;
                 if (bundleInfo.filePattern == "") bundleInfo.filePattern = "*.*";
-                string[] files = Directory.GetFiles(bundleInfo.dirPath, bundleInfo.filePattern, bundleInfo.searchOption);
+                string dirPath = AssetDatabase.GetAssetPath(bundleInfo.directory);
+                if (!AssetDatabase.IsValidFolder(dirPath)) continue;
+                string[] files = Directory.GetFiles(dirPath, bundleInfo.filePattern, bundleInfo.searchOption);
                 for (int i = 0; i < files.Length; i++)
                 {
                     files[i] = files[i].Replace('\\', '/');
@@ -134,28 +135,30 @@ namespace EZhex1991.EZEditorTools.Build
             return buildList.ToArray();
         }
 
-        protected static void CreateFileList(string dirPath, string listFileName)
+        protected static void CreateFileList(string dirPath)
         {
-            string listFilePath = Path.Combine(dirPath, listFileName);
+            const string fileListName = "_files.json";
+            string listFilePath = Path.Combine(dirPath, fileListName);
             if (File.Exists(listFilePath)) File.Delete(listFilePath);
 
             List<string> fileList = new List<string>();
             DirTraverse(dirPath, fileList);
 
-            StreamWriter streamWriter = new StreamWriter(File.Create(listFilePath));
+            List<FileInfo> fileInfos = new List<FileInfo>();
             foreach (string filePath in fileList)
             {
                 if (filePath.EndsWith(".meta") || filePath.EndsWith(".manifest")) continue;
-                FileInfo info = new FileInfo()
+                fileInfos.Add(new FileInfo()
                 {
                     fileName = filePath.Substring(dirPath.Length + 1),
                     md5 = GetFileMD5(filePath),
                     size = Mathf.CeilToInt(new System.IO.FileInfo(filePath).Length >> 10)
-                };
-                streamWriter.WriteLine(JsonUtility.ToJson(info));
+                });
             }
-            streamWriter.Close();
-            File.Copy(listFilePath, Path.Combine("Assets/Resources", listFileName), true);
+            File.WriteAllText(listFilePath, JsonUtility.ToJson(new FileInfoCollection()
+            {
+                files = fileInfos.ToArray()
+            }, true));
         }
         protected static void DirTraverse(string dirPath, List<string> fileList)
         {
