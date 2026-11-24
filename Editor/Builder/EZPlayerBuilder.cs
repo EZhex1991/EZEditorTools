@@ -52,6 +52,9 @@ namespace EZhex1991.EZEditorTools.Build
         public int buildNumber;
         public Texture2D icon;
 
+        [EZNestedEditor]
+        public EZCopyList preBuildCopyList;
+        [EZNestedEditor]
         public EZCopyList postBuildCopyList;
 
         public bool CheckTarget(BuildTargetGroup buildGroup)
@@ -168,6 +171,10 @@ namespace EZhex1991.EZEditorTools.Build
             {
                 bundleBuilder.Execute(buildTarget);
             }
+            if (preBuildCopyList != null)
+            {
+                preBuildCopyList.CopyFiles();
+            }
 
             BuildReport report = BuildPipeline.BuildPlayer(GetBuildOptions(path));
             var summary = report.summary;
@@ -178,7 +185,10 @@ namespace EZhex1991.EZEditorTools.Build
                     break;
                 case BuildResult.Succeeded:
                     Debug.Log("Build Succeeded");
-                    postBuildCopyList.CopyFiles(path);
+                    if (postBuildCopyList != null)
+                    {
+                        postBuildCopyList.CopyFiles(path);
+                    }
                     break;
             }
             File.WriteAllText(projectSettingsPath, oldSettings);

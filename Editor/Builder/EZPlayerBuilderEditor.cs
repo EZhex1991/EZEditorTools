@@ -30,6 +30,7 @@ namespace EZhex1991.EZEditorTools.Build
         protected SerializedProperty m_BuildNumber;
         protected SerializedProperty m_Icon;
 
+        protected SerializedProperty m_PreBuildCopyList;
         protected SerializedProperty m_PostBuildCopyList;
 
         public static class Styles
@@ -56,6 +57,7 @@ namespace EZhex1991.EZEditorTools.Build
             m_BuildNumber = serializedObject.FindProperty("buildNumber");
             m_Icon = serializedObject.FindProperty("icon");
 
+            m_PreBuildCopyList = serializedObject.FindProperty("preBuildCopyList");
             m_PostBuildCopyList = serializedObject.FindProperty("postBuildCopyList");
 
         }
@@ -89,7 +91,11 @@ namespace EZhex1991.EZEditorTools.Build
             EditorGUILayout.Space();
             PlayerSettingsGUI();
             EditorGUILayout.Space();
-            EditorGUILayout.PropertyField(m_PostBuildCopyList);
+            EditorGUILayout.LabelField("Copy Lists", EditorStyles.boldLabel);
+            EZBuilderGUIUtility.DrawPreBuildCopyListHelpBox();
+            EditorGUILayout.PropertyField(m_PreBuildCopyList, new GUIContent("Pre-build Copy List"));
+            EZBuilderGUIUtility.DrawPostBuildCopyListHelpBox();
+            EditorGUILayout.PropertyField(m_PostBuildCopyList, new GUIContent("Post-build Copy List"));
 
             serializedObject.ApplyModifiedProperties();
         }

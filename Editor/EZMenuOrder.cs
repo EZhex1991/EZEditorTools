@@ -62,6 +62,7 @@ namespace EZhex1991.EZEditorTools
         _____SECTION_1_____ = _____SECTION_0_____ + 100,
         BundleBuilder,
         PlayerBuilder,
+        CopyList,
 
         _____SECTION_2_____ = _____SECTION_0_____ + 200,
         ScriptStatistics,

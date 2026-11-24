@@ -11,8 +11,8 @@ using UnityEngine;
 
 namespace EZhex1991.EZEditorTools
 {
-    [Serializable]
-    public class EZCopyList
+    [CreateAssetMenu(fileName = "EZCopyList", menuName = "EZEditorTools/Copy List", order = (int)EZAssetMenuOrder.CopyList)]
+    public class EZCopyList : ScriptableObject
     {
         [SerializeField]
         private EZCopyPath[] m_CopyPaths;
@@ -26,14 +26,20 @@ namespace EZhex1991.EZEditorTools
         };
         public string[] blackList { get { return m_BlackList; } }
 
-        public void CopyFiles(string destination)
+        public void CopyFiles(string destination = null)
         {
+            string projectPath = GetProjectPath();
+            string destinationRoot = string.IsNullOrEmpty(destination)
+                ? projectPath
+                : ResolvePath(destination, projectPath);
+
             for (int i = 0; i < copyPaths.Length; i++)
             {
                 EditorUtility.DisplayProgressBar("Copy Files", "", (float)i / copyPaths.Length);
-                string src = copyPaths[i].sourcePath;
-                string dst = Path.Combine(destination, copyPaths[i].destinationPath);
-                if (string.IsNullOrEmpty(src) || string.IsNullOrEmpty(dst)) continue;
+                if (string.IsNullOrEmpty(copyPaths[i].sourcePath) || string.IsNullOrEmpty(copyPaths[i].destinationPath)) continue;
+
+                string src = ResolvePath(copyPaths[i].sourcePath, projectPath);
+                string dst = ResolvePath(copyPaths[i].destinationPath, destinationRoot);
                 if (File.Exists(src))
                 {
                     try
@@ -70,6 +76,18 @@ namespace EZhex1991.EZEditorTools
                 }
             }
             EditorUtility.ClearProgressBar();
+        }
+
+        private static string ResolvePath(string path, string rootPath)
+        {
+            return Path.IsPathRooted(path)
+                ? Path.GetFullPath(path)
+                : Path.GetFullPath(Path.Combine(rootPath, path));
+        }
+
+        private static string GetProjectPath()
+        {
+            return Directory.GetParent(Application.dataPath).FullName;
         }
 
         public bool IsInBlackList(string fileName)

@@ -11,6 +11,19 @@ namespace EZhex1991.EZEditorTools.Build
 {
     public static class EZBuilderGUIUtility
     {
+        public const string PreBuildCopyListHelpText = "Source and destination paths are relative to the project root.";
+        public const string PostBuildCopyListHelpText = "Source paths are relative to the project root. Destination paths are relative to the build output directory.";
+
+        public static void DrawPreBuildCopyListHelpBox()
+        {
+            EditorGUILayout.HelpBox(PreBuildCopyListHelpText, MessageType.Info);
+        }
+
+        public static void DrawPostBuildCopyListHelpBox()
+        {
+            EditorGUILayout.HelpBox(PostBuildCopyListHelpText, MessageType.Info);
+        }
+
         public static void DrawQuickBuildButtons(Action<BuildTarget> onBuild)
         {
             EditorGUILayout.LabelField("Quick Build", EditorStyles.boldLabel);

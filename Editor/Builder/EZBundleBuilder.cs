@@ -39,7 +39,10 @@ namespace EZhex1991.EZEditorTools.Build
         public string listFileName = "files.txt";
         public bool forceRebuild = false;
 
-        public EZCopyPath[] preBuildCopyList;
+        [EZNestedEditor]
+        public EZCopyList preBuildCopyList;
+        [EZNestedEditor]
+        public EZCopyList postBuildCopyList;
         public BundleInfo[] bundleList;
 
         public void Execute(BuildTarget buildTarget)
@@ -49,13 +52,20 @@ namespace EZhex1991.EZEditorTools.Build
             if (forceRebuild && Directory.Exists(buildPath)) Directory.Delete(buildPath, true);
             Directory.CreateDirectory(buildPath);
             AssetDatabase.Refresh();
-            CopyPreBuildFiles();
+            if (preBuildCopyList != null)
+            {
+                preBuildCopyList.CopyFiles();
+            }
 
             AssetDatabase.Refresh();
             AssetBundleManifest manifest = BuildPipeline.BuildAssetBundles(buildPath, GetBuildList(), buildOptions, buildTarget);
             OnPostBuild(manifest);
             if (!string.IsNullOrEmpty(listFileName)) CreateFileList(buildPath, listFileName);
             AssetDatabase.Refresh();
+            if (postBuildCopyList != null)
+            {
+                postBuildCopyList.CopyFiles(buildPath);
+            }
 
             Debug.Log("build complete.");
         }
@@ -104,47 +114,6 @@ namespace EZhex1991.EZEditorTools.Build
             }
         }
 
-        protected void CopyPreBuildFiles()
-        {
-            for (int i = 0; i < preBuildCopyList.Length; i++)
-            {
-                EditorUtility.DisplayProgressBar("Pre-build Copy", "", (float)i / preBuildCopyList.Length);
-                string src = preBuildCopyList[i].sourcePath;
-                string dst = preBuildCopyList[i].destinationPath;
-                if (string.IsNullOrEmpty(src) || string.IsNullOrEmpty(dst)) continue;
-                if (File.Exists(src))
-                {
-                    try
-                    {
-                        File.Copy(src, dst, true);
-                    }
-                    catch (Exception e)
-                    {
-                        Debug.LogWarning(e.Message);
-                    }
-                }
-                else if (Directory.Exists(src))
-                {
-                    Directory.CreateDirectory(dst);
-                    string[] files = Directory.GetFiles(src);
-                    foreach (string filePath in files)
-                    {
-                        try
-                        {
-                            if (filePath.EndsWith(".meta")) continue;
-                            string newPath = dst + filePath.Substring(src.Length);
-                            Directory.CreateDirectory(Path.GetDirectoryName(newPath));
-                            File.Copy(filePath, newPath, true);
-                        }
-                        catch (Exception e)
-                        {
-                            Debug.LogWarning(e.Message);
-                        }
-                    }
-                }
-            }
-            EditorUtility.ClearProgressBar();
-        }
         protected AssetBundleBuild[] GetBuildList()
         {
             List<AssetBundleBuild> buildList = new List<AssetBundleBuild>();

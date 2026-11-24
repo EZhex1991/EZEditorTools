@@ -22,9 +22,9 @@ namespace EZhex1991.EZEditorTools.Build
         private SerializedProperty m_ListFileName;
         private SerializedProperty m_ForceRebuild;
         private SerializedProperty m_PreBuildCopyList;
+        private SerializedProperty m_PostBuildCopyList;
         private SerializedProperty m_BundleList;
 
-        private EZCopyPathListGUI preBuildCopyListGUI;
         private ReorderableList bundleList;
 
         void OnEnable()
@@ -38,8 +38,8 @@ namespace EZhex1991.EZEditorTools.Build
             m_ListFileName = serializedObject.FindProperty("listFileName");
             m_ForceRebuild = serializedObject.FindProperty("forceRebuild");
             m_PreBuildCopyList = serializedObject.FindProperty("preBuildCopyList");
+            m_PostBuildCopyList = serializedObject.FindProperty("postBuildCopyList");
             m_BundleList = serializedObject.FindProperty("bundleList");
-            preBuildCopyListGUI = new EZCopyPathListGUI(serializedObject, m_PreBuildCopyList, "Source Path", "Destination Path");
             bundleList = new ReorderableList(serializedObject, m_BundleList, true, true, true, true)
             {
                 drawHeaderCallback = DrawBundleListHeader,
@@ -74,9 +74,13 @@ namespace EZhex1991.EZEditorTools.Build
             EditorGUILayout.LabelField("Build Options", EditorStyles.boldLabel);
             DrawBuildOptions();
 
-            preBuildCopyListGUI.DoLayoutList("Pre-build Copy");
-
             EZEditorGUIUtility.DoLayoutReorderableList(bundleList);
+
+            EditorGUILayout.LabelField("Copy Lists", EditorStyles.boldLabel);
+            EZBuilderGUIUtility.DrawPreBuildCopyListHelpBox();
+            EditorGUILayout.PropertyField(m_PreBuildCopyList, new GUIContent("Pre-build Copy List"));
+            EZBuilderGUIUtility.DrawPostBuildCopyListHelpBox();
+            EditorGUILayout.PropertyField(m_PostBuildCopyList, new GUIContent("Post-build Copy List"));
 
             serializedObject.ApplyModifiedProperties();
         }
