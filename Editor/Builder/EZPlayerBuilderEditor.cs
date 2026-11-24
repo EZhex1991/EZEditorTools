@@ -3,6 +3,7 @@
  * Organization:    #ORGANIZATION#
  * Description:     
  */
+using System.IO;
 using UnityEditor;
 using UnityEngine;
 
@@ -18,7 +19,7 @@ namespace EZhex1991.EZEditorTools.Build
 
         protected SerializedProperty m_BundleBuilder;
 
-        protected SerializedProperty m_LocationPathName;
+        protected SerializedProperty m_OutputPath;
         protected SerializedProperty m_ExeFileName;
         protected SerializedProperty m_Scenes;
 
@@ -32,14 +33,13 @@ namespace EZhex1991.EZEditorTools.Build
 
         protected SerializedProperty m_CopyList;
 
-        private string locationPathName;
         private string bundleVersion;
 
         public static class Styles
         {
             public static string Tooltip_Wildcards = "Wildcards: <Date>|<Time>|<CompanyName>|<ProductName>|<BundleIdentifier>|<BundleVersion>|<BuildNumber>|<BuildTarget>";
             public static GUIContent Label_BuildNumberIncrement = new GUIContent("Increment", "buildNumber will increase automatically after a successful build.");
-            public static GUIContent Label_LocationPathName = new GUIContent("Localtion Path Name", Tooltip_Wildcards);
+            public static GUIContent Label_OutputPath = new GUIContent("Output Path", Tooltip_Wildcards);
             public static GUIContent Label_ExeFileName = new GUIContent("EXE File Name", Tooltip_Wildcards);
         }
 
@@ -49,7 +49,7 @@ namespace EZhex1991.EZEditorTools.Build
             m_BuildTarget = serializedObject.FindProperty("buildTarget");
             m_BuildOptions = serializedObject.FindProperty("buildOptions");
             m_BundleBuilder = serializedObject.FindProperty("bundleBuilder");
-            m_LocationPathName = serializedObject.FindProperty("locationPathName");
+            m_OutputPath = serializedObject.FindProperty("outputPath");
             m_ExeFileName = serializedObject.FindProperty("exeFileName");
             m_Scenes = serializedObject.FindProperty("scenes");
             m_CompanyName = serializedObject.FindProperty("companyName");
@@ -62,7 +62,6 @@ namespace EZhex1991.EZEditorTools.Build
 
             m_CopyList = serializedObject.FindProperty("copyList");
 
-            locationPathName = playerBuilder.GetLocationPathName();
             bundleVersion = playerBuilder.GetBundleVersion();
         }
 
@@ -142,23 +141,54 @@ namespace EZhex1991.EZEditorTools.Build
             {
                 EditorGUILayout.BeginHorizontal();
                 EditorGUI.BeginChangeCheck();
-                EditorGUILayout.PropertyField(m_LocationPathName, Styles.Label_LocationPathName);
+                EditorGUILayout.PropertyField(m_OutputPath, Styles.Label_OutputPath);
                 if (GUILayout.Button("...", EditorStyles.miniButton, new GUILayoutOption[] { GUILayout.Width(30) }))
                 {
                     string path = EditorUtility.SaveFolderPanel("Choose Output Folder", "", "");
-                    if (!string.IsNullOrEmpty(path)) m_LocationPathName.stringValue = path;
+                    if (!string.IsNullOrEmpty(path)) m_OutputPath.stringValue = path;
                 }
                 if (EditorGUI.EndChangeCheck())
                 {
                     serializedObject.ApplyModifiedProperties();
-                    locationPathName = playerBuilder.GetLocationPathName();
                 }
                 EditorGUILayout.EndHorizontal();
+                DrawOutputPathInfo();
                 EditorGUILayout.PropertyField(m_ExeFileName, Styles.Label_ExeFileName);
-                EditorGUILayout.HelpBox(locationPathName, MessageType.Info);
             }
             EditorGUILayout.PropertyField(m_BundleBuilder);
             EditorGUILayout.PropertyField(m_Scenes, true);
+        }
+
+        private void DrawOutputPathInfo()
+        {
+            BuildTarget previewTarget = (BuildTarget)m_BuildTarget.intValue;
+            if (previewTarget == BuildTarget.NoTarget)
+            {
+                previewTarget = EditorUserBuildSettings.activeBuildTarget;
+            }
+
+            string fullPath = GetFullPath(playerBuilder.GetOutputPath(previewTarget));
+            EditorGUI.indentLevel++;
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.LabelField(fullPath);
+            EditorGUI.BeginDisabledGroup(string.IsNullOrEmpty(fullPath));
+            if (GUILayout.Button("Open", GUILayout.Width(50)))
+            {
+                if (!Directory.Exists(fullPath)) Directory.CreateDirectory(fullPath);
+                EditorUtility.RevealInFinder(fullPath);
+            }
+            EditorGUI.EndDisabledGroup();
+            EditorGUILayout.EndHorizontal();
+            EditorGUI.indentLevel--;
+        }
+
+        private static string GetFullPath(string path)
+        {
+            if (string.IsNullOrEmpty(path)) return string.Empty;
+            if (Path.IsPathRooted(path)) return Path.GetFullPath(path);
+
+            string projectPath = Directory.GetParent(Application.dataPath).FullName;
+            return Path.GetFullPath(Path.Combine(projectPath, path));
         }
         private void PlayerSettingsGUI()
         {

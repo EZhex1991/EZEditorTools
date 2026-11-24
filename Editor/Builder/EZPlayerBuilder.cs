@@ -39,7 +39,7 @@ namespace EZhex1991.EZEditorTools.Build
         {
             switch (buildTarget)
             {
-                case BuildTarget.NoTarget: return "Unknow";
+                case BuildTarget.NoTarget: return "NoTarget";
                 case BuildTarget.StandaloneOSX: return "OSX";
                 case BuildTarget.StandaloneWindows: return "Win";
                 case BuildTarget.StandaloneWindows64: return "Win64";
@@ -70,7 +70,7 @@ namespace EZhex1991.EZEditorTools.Build
 
         public EZBundleBuilder bundleBuilder;
 
-        public string locationPathName = "Builds/<ProductName>-<BuildTarget>-<BundleVersion>";
+        public string outputPath = "Builds/<BuildTarget>/<ProductName>-<BundleVersion>";
         public string exeFileName = "<ProductName>-<BundleVersion>";
         public SceneAsset[] scenes;
 
@@ -183,12 +183,12 @@ namespace EZhex1991.EZEditorTools.Build
             BuildTargetGroup buildGroup = GetGroup(buildTarget);
             if (!CheckTarget(buildGroup)) return;
 
-            if (string.IsNullOrEmpty(locationPathName))
+            if (string.IsNullOrEmpty(outputPath))
             {
-                locationPathName = EditorUtility.SaveFolderPanel("Choose Output Folder", "", "");
-                if (string.IsNullOrEmpty(locationPathName)) return;
+                outputPath = EditorUtility.SaveFolderPanel("Choose Output Folder", "", "");
+                if (string.IsNullOrEmpty(outputPath)) return;
             }
-            string path = GetLocationPathName();
+            string path = GetOutputPath();
 
             string projectSettingsPath = Application.dataPath.Substring(0, Application.dataPath.Length - "Assets".Length) + "/ProjectSettings/ProjectSettings.asset";
             string oldSettings = File.ReadAllText(projectSettingsPath);
@@ -222,8 +222,12 @@ namespace EZhex1991.EZEditorTools.Build
 
         public string HandleWildcards(string text)
         {
+            return HandleWildcards(text, buildTarget);
+        }
+        public string HandleWildcards(string text, BuildTarget target)
+        {
             return text
-                .Replace(Wildcard_BuildTarget, GetTargetName(buildTarget))
+                .Replace(Wildcard_BuildTarget, GetTargetName(target))
                 .Replace(Wildcard_BundleIdentifier, bundleIdentifier)
                 // BundleVersion could contains BuildNumber wildcard
                 .Replace(Wildcard_BundleVersion, bundleVersion).Replace(Wildcard_BuildNumber, buildNumber.ToString())
@@ -232,9 +236,13 @@ namespace EZhex1991.EZEditorTools.Build
                 .Replace(Wildcard_ProductName, productName)
                 .Replace(Wildcard_Time, DateTime.Now.ToString("HHmmss"));
         }
-        public string GetLocationPathName()
+        public string GetOutputPath()
         {
-            return HandleWildcards(locationPathName);
+            return HandleWildcards(outputPath);
+        }
+        public string GetOutputPath(BuildTarget target)
+        {
+            return HandleWildcards(outputPath, target);
         }
         public string GetExeFileName()
         {

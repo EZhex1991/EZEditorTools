@@ -3,6 +3,7 @@
  * Organization:    #ORGANIZATION#
  * Description:     
  */
+using System.IO;
 using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
@@ -129,10 +130,41 @@ namespace EZhex1991.EZEditorTools.Build
         private void DrawBaseProperties()
         {
             m_BuildOptions.intValue = (int)(BuildAssetBundleOptions)EditorGUILayout.EnumFlagsField("Build Options", (BuildAssetBundleOptions)m_BuildOptions.intValue);
-            EditorGUILayout.PropertyField(m_OutputPath);
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.PrefixLabel("Output Path");
+            EZEditorGUIUtility.DrawFolderPathField(EditorGUILayout.GetControlRect(), m_OutputPath);
+            EditorGUILayout.EndHorizontal();
+            DrawOutputPathInfo();
             EditorGUILayout.PropertyField(m_ListFileName);
             EditorGUILayout.PropertyField(m_ForceRebuild);
             EditorGUILayout.PropertyField(m_ManagerMode);
+        }
+
+        private void DrawOutputPathInfo()
+        {
+            string fullPath = GetFullPath(m_OutputPath.stringValue);
+            EditorGUI.indentLevel++;
+            EditorGUILayout.BeginHorizontal();
+            Rect pathRect = GUILayoutUtility.GetRect(new GUIContent(fullPath), GUI.skin.label, GUILayout.ExpandWidth(true));
+            EditorGUI.SelectableLabel(pathRect, fullPath, GUI.skin.label);
+            EditorGUI.BeginDisabledGroup(string.IsNullOrEmpty(fullPath));
+            if (GUILayout.Button("Open", GUILayout.Width(50)))
+            {
+                if (!Directory.Exists(fullPath)) Directory.CreateDirectory(fullPath);
+                EditorUtility.RevealInFinder(fullPath);
+            }
+            EditorGUI.EndDisabledGroup();
+            EditorGUILayout.EndHorizontal();
+            EditorGUI.indentLevel--;
+        }
+
+        private static string GetFullPath(string path)
+        {
+            if (string.IsNullOrEmpty(path)) return string.Empty;
+            if (Path.IsPathRooted(path)) return Path.GetFullPath(path);
+
+            string projectPath = Directory.GetParent(Application.dataPath).FullName;
+            return Path.GetFullPath(Path.Combine(projectPath, path));
         }
 
         private void DrawCopyListHeader(Rect rect)
