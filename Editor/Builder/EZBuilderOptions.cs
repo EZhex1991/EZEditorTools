@@ -4,7 +4,6 @@
  * Description:     
  */
 using System;
-using System.IO;
 using UnityEditor;
 
 namespace EZhex1991.EZEditorTools.Build
@@ -22,12 +21,19 @@ namespace EZhex1991.EZEditorTools.Build
         Recursive = 2,
     }
 
+    public enum BundleBuildMode
+    {
+        Single = 0,
+        DirectSubfolders = 1,
+        AllSubfolders = 2,
+    }
+
     [Serializable]
     public class BundleInfo
     {
         public string bundleName = "";
         public string filePattern = "*.*";
-        public SearchOption searchOption = SearchOption.AllDirectories;
+        public BundleBuildMode buildMode = BundleBuildMode.Single;
         public DefaultAsset directory;
     }
     [Serializable]

@@ -118,21 +118,56 @@ namespace EZhex1991.EZEditorTools.Build
             List<AssetBundleBuild> buildList = new List<AssetBundleBuild>();
             foreach (BundleInfo bundleInfo in bundleList)
             {
-                if (bundleInfo.bundleName == "") continue;
                 if (bundleInfo.filePattern == "") bundleInfo.filePattern = "*.*";
-                string dirPath = AssetDatabase.GetAssetPath(bundleInfo.directory);
-                if (!AssetDatabase.IsValidFolder(dirPath)) continue;
-                string[] files = Directory.GetFiles(dirPath, bundleInfo.filePattern, bundleInfo.searchOption);
-                for (int i = 0; i < files.Length; i++)
+                string rootPath = AssetDatabase.GetAssetPath(bundleInfo.directory);
+                if (!AssetDatabase.IsValidFolder(rootPath)) continue;
+
+                string bundleName = string.IsNullOrEmpty(bundleInfo.bundleName)
+                    ? rootPath
+                    : bundleInfo.bundleName;
+                switch (bundleInfo.buildMode)
                 {
-                    files[i] = files[i].Replace('\\', '/');
+                    case BundleBuildMode.Single:
+                        AddBuild(buildList, bundleName, rootPath, bundleInfo.filePattern, SearchOption.AllDirectories);
+                        break;
+                    case BundleBuildMode.DirectSubfolders:
+                        AddBuild(buildList, GetBundleName(bundleName, rootPath, rootPath, true), rootPath, bundleInfo.filePattern, SearchOption.TopDirectoryOnly);
+                        foreach (string directory in Directory.GetDirectories(rootPath))
+                        {
+                            AddBuild(buildList, GetBundleName(bundleName, rootPath, directory, true), directory, bundleInfo.filePattern, SearchOption.AllDirectories);
+                        }
+                        break;
+                    case BundleBuildMode.AllSubfolders:
+                        foreach (string directory in Directory.GetDirectories(rootPath, "*", SearchOption.AllDirectories))
+                        {
+                            AddBuild(buildList, GetBundleName(bundleName, rootPath, directory, true), directory, bundleInfo.filePattern, SearchOption.TopDirectoryOnly);
+                        }
+                        break;
                 }
-                AssetBundleBuild build = new AssetBundleBuild();
-                build.assetBundleName = bundleInfo.bundleName;
-                build.assetNames = files;
-                buildList.Add(build);
             }
             return buildList.ToArray();
+        }
+
+        private static void AddBuild(List<AssetBundleBuild> buildList, string bundleName, string directory, string filePattern, SearchOption searchOption)
+        {
+            string[] files = Directory.GetFiles(directory, filePattern, searchOption);
+            if (files.Length == 0) return;
+            for (int i = 0; i < files.Length; i++)
+            {
+                files[i] = files[i].Replace('\\', '/');
+            }
+            buildList.Add(new AssetBundleBuild()
+            {
+                assetBundleName = bundleName,
+                assetNames = files
+            });
+        }
+
+        private static string GetBundleName(string bundleName, string rootPath, string directory, bool replaceSeparators)
+        {
+            string relativePath = directory.Substring(rootPath.Length).TrimStart('/', '\\');
+            string name = string.IsNullOrEmpty(relativePath) ? bundleName : bundleName + "/" + relativePath;
+            return replaceSeparators ? name.Replace('/', '_').Replace('\\', '_') : name;
         }
 
         protected static void CreateFileList(string dirPath)

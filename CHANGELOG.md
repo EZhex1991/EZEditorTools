@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.2.0] - 2026-11-24
+
+### Added
+
+- Added `Single`, `DirectSubfolders`, and `AllSubfolders` Bundle Builder modes.
+- Added support for adding multiple Bundle Builder sources by dragging folders onto the Bundle List.
+
+### Changed
+
+- Bundle names now default to the selected folder path.
+- Generated Bundle names replace path separators with underscores when using a split mode.
+- Replaced the Bundle Builder file search option with an explicit Bundle build mode.
+
 ## [1.1.0] - 2026-11-24
 
 ### Added

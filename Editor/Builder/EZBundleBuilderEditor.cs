@@ -74,6 +74,7 @@ namespace EZhex1991.EZEditorTools.Build
             DrawBuildOptions();
 
             EZEditorGUIUtility.DoLayoutReorderableList(bundleList);
+            HandleBundleListDragAndDrop();
 
             EditorGUILayout.LabelField("Copy Lists", EditorStyles.boldLabel);
             EZBuilderGUIUtility.DrawPreBuildCopyListHelpBox();
@@ -141,7 +142,7 @@ namespace EZhex1991.EZEditorTools.Build
             rect.x += width + residue;
             EditorGUI.LabelField(new Rect(rect.x, rect.y, width + residue - margin, rect.height), "File Pattern");
             rect.x += width + residue;
-            EditorGUI.LabelField(new Rect(rect.x, rect.y, width + residue - margin, rect.height), "Search Option");
+            EditorGUI.LabelField(new Rect(rect.x, rect.y, width + residue - margin, rect.height), "Build Mode");
             rect.x += width + residue;
             EditorGUI.LabelField(new Rect(rect.x, rect.y, width + residue * 7 - margin, rect.height), "Source");
         }
@@ -153,17 +154,67 @@ namespace EZhex1991.EZEditorTools.Build
             SerializedProperty m_BundleInfo = m_BundleList.GetArrayElementAtIndex(index);
             SerializedProperty m_BundleName = m_BundleInfo.FindPropertyRelative("bundleName");
             SerializedProperty m_FilePattern = m_BundleInfo.FindPropertyRelative("filePattern");
-            SerializedProperty m_SearchOption = m_BundleInfo.FindPropertyRelative("searchOption");
+            SerializedProperty m_BuildMode = m_BundleInfo.FindPropertyRelative("buildMode");
             SerializedProperty m_Directory = m_BundleInfo.FindPropertyRelative("directory");
+
+            if (m_Directory.objectReferenceValue != null && string.IsNullOrEmpty(m_BundleName.stringValue))
+            {
+                m_BundleName.stringValue = AssetDatabase.GetAssetPath(m_Directory.objectReferenceValue);
+            }
 
             float width = Mathf.Min(100, rect.width / 4); float residue = (rect.width - width * 4) / 10; float margin = 5;
             EditorGUI.PropertyField(new Rect(rect.x, rect.y, width + residue - margin, rect.height), m_BundleName, GUIContent.none);
             rect.x += width + residue;
             EditorGUI.PropertyField(new Rect(rect.x, rect.y, width + residue - margin, rect.height), m_FilePattern, GUIContent.none);
             rect.x += width + residue;
-            EditorGUI.PropertyField(new Rect(rect.x, rect.y, width + residue - margin, rect.height), m_SearchOption, GUIContent.none);
+            EditorGUI.PropertyField(new Rect(rect.x, rect.y, width + residue - margin, rect.height), m_BuildMode, GUIContent.none);
             rect.x += width + residue;
             EditorGUI.PropertyField(new Rect(rect.x, rect.y, width + residue * 7 - margin, rect.height), m_Directory, GUIContent.none);
+        }
+
+        private void HandleBundleListDragAndDrop()
+        {
+            Event current = Event.current;
+            if (current.type != EventType.DragUpdated && current.type != EventType.DragPerform) return;
+
+            Rect lastRect = GUILayoutUtility.GetLastRect();
+            Rect dropRect = lastRect;
+            if (m_BundleList.isExpanded)
+            {
+                dropRect.y -= bundleList.GetHeight() - lastRect.height;
+                dropRect.height = bundleList.GetHeight();
+            }
+            if (!dropRect.Contains(current.mousePosition)) return;
+
+            Object[] directories = System.Array.FindAll(DragAndDrop.objectReferences, obj =>
+            {
+                return obj != null && AssetDatabase.IsValidFolder(AssetDatabase.GetAssetPath(obj));
+            });
+            if (directories.Length == 0) return;
+
+            DragAndDrop.visualMode = DragAndDropVisualMode.Copy;
+            if (current.type == EventType.DragPerform)
+            {
+                DragAndDrop.AcceptDrag();
+                AddDirectories(directories);
+                current.Use();
+            }
+        }
+
+        private void AddDirectories(Object[] directories)
+        {
+            serializedObject.Update();
+            int startIndex = m_BundleList.arraySize;
+            m_BundleList.arraySize += directories.Length;
+            for (int i = 0; i < directories.Length; i++)
+            {
+                SerializedProperty bundleInfo = m_BundleList.GetArrayElementAtIndex(startIndex + i);
+                bundleInfo.FindPropertyRelative("bundleName").stringValue = AssetDatabase.GetAssetPath(directories[i]);
+                bundleInfo.FindPropertyRelative("filePattern").stringValue = "*.*";
+                bundleInfo.FindPropertyRelative("buildMode").enumValueIndex = (int)BundleBuildMode.Single;
+                bundleInfo.FindPropertyRelative("directory").objectReferenceValue = directories[i];
+            }
+            serializedObject.ApplyModifiedProperties();
         }
 
     }
