@@ -91,11 +91,11 @@ namespace EZhex1991.EZEditorTools
         }
 
 #if UNITY_EDITOR_WIN
-        [MenuItem(Root + "PlayerPrefs Editor", false, (int)EZMenuOrder.PlayerPrefsEditor)]
-        private static void ShowPlayerPrefsEditor() => EditorWindow.GetWindow<EZPlayerPrefsEditor>("PlayerPrefs Editor").Show();
+        [MenuItem(Root + "PlayerPrefs编辑器丨PlayerPrefs Editor", false, (int)EZMenuOrder.PlayerPrefsEditor)]
+        private static void ShowPlayerPrefsEditor() => EditorWindow.GetWindow<EZPlayerPrefsEditor>().Show();
 
-        [MenuItem(Root + "EditorPrefs Editor", false, (int)EZMenuOrder.EditorPrefsEditor)]
-        private static void ShowEditorPrefsEditor() => EditorWindow.GetWindow<EZEditorPrefsEditor>("EditorPrefs Editor").Show();
+        [MenuItem(Root + "EditorPrefs编辑器丨EditorPrefs Editor", false, (int)EZMenuOrder.EditorPrefsEditor)]
+        private static void ShowEditorPrefsEditor() => EditorWindow.GetWindow<EZEditorPrefsEditor>().Show();
 #endif
 
         // SECTION_3
@@ -106,14 +106,14 @@ namespace EZhex1991.EZEditorTools
         private static void ShowImageCanvasTool() => EditorWindow.GetWindow<EZImageCanvasTool>().Show();
 
         [MenuItem(Root + "材质优化器丨Material Optimizer", false, (int)EZMenuOrder.MaterialOptimizer)]
-        private static void ShowMaterialOptimizer() => EditorWindow.GetWindow<EZMaterialOptimizer>("Material Optimizer").Show();
+        private static void ShowMaterialOptimizer() => EditorWindow.GetWindow<EZMaterialOptimizer>().Show();
 
         // SECTION_4
         [MenuItem(Root + "资源引用查看器丨Asset Reference Viewer", false, (int)EZMenuOrder.AssetReferenceViewer)]
-        private static void ShowAssetReferenceViewer() => EditorWindow.GetWindow<EZAssetReferenceViewer>("Asset Reference Viewer").Show();
+        private static void ShowAssetReferenceViewer() => EditorWindow.GetWindow<EZAssetReferenceViewer>().Show();
 
         [MenuItem(Root + "对应物体查看器丨Corresponding Object Viewer", false, (int)EZMenuOrder.CorrespondingObjectViewer)]
-        private static void ShowCorrespondingObjectViewer() => EditorWindow.GetWindow<EZCorrespondingObjectViewer>("Corresponding Object Viewer").Show();
+        private static void ShowCorrespondingObjectViewer() => EditorWindow.GetWindow<EZCorrespondingObjectViewer>().Show();
 
         [MenuItem(Root + "字体引用查看器丨Font Reference Viewer", false, (int)EZMenuOrder.FontReferenceViewer)]
         private static void ShowFontReferenceViewer() => EditorWindow.GetWindow<EZFontReferenceViewer>("Font Reference Viewer").Show();

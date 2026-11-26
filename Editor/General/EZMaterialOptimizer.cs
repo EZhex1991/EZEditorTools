@@ -43,6 +43,8 @@ namespace EZhex1991.EZEditorTools
 
         private void OnEnable()
         {
+            EZLocalization.LanguageChanged += OnLanguageChanged;
+            OnLanguageChanged();
             propertyName1 = EditorPrefs.GetString(EZEditorPreferenceKeys.MaterialPropertyName1, string.Empty);
             propertyName2 = EditorPrefs.GetString(EZEditorPreferenceKeys.MaterialPropertyName2, string.Empty);
             GetMaterials();
@@ -50,7 +52,16 @@ namespace EZhex1991.EZEditorTools
         }
         private void OnDisable()
         {
+            EZLocalization.LanguageChanged -= OnLanguageChanged;
             Undo.undoRedoPerformed -= Repaint;
+        }
+
+        private static string L(string key) => EZLocalization.Get<EZMaterialOptimizer>(key);
+
+        private void OnLanguageChanged()
+        {
+            titleContent = new GUIContent(L("Title"));
+            Repaint();
         }
 
         private void OnSelectionChange()
@@ -65,11 +76,11 @@ namespace EZhex1991.EZEditorTools
 
             if (materials.Length == 0)
             {
-                EditorGUILayout.HelpBox("No Material Selected", MessageType.Info);
+                EditorGUILayout.HelpBox(L("NoMaterialSelected"), MessageType.Info);
                 return;
             }
 
-            if (GUILayout.Button("Optimize Properties"))
+            if (GUILayout.Button(L("RemoveUnusedProperties")))
             {
                 for (int i = 0; i < materials.Length; i++)
                 {
@@ -78,16 +89,19 @@ namespace EZhex1991.EZEditorTools
                 }
             }
 
+            EditorGUILayout.Space();
             EditorGUI.BeginChangeCheck();
-            propertyName1 = EditorGUILayout.TextField("Copy From", propertyName1);
-            propertyName2 = EditorGUILayout.TextField("To", propertyName2);
+            EditorGUILayout.BeginHorizontal();
+            propertyName1 = EditorGUILayout.TextField(L("CopyFrom"), propertyName1);
+            propertyName2 = EditorGUILayout.TextField(L("CopyTo"), propertyName2);
+            EditorGUILayout.EndHorizontal();
             if (EditorGUI.EndChangeCheck())
             {
                 EditorPrefs.SetString(EZEditorPreferenceKeys.MaterialPropertyName1, propertyName1);
                 EditorPrefs.SetString(EZEditorPreferenceKeys.MaterialPropertyName2, propertyName2);
             }
             GUI.enabled = !(string.IsNullOrEmpty(propertyName1) || string.IsNullOrEmpty(propertyName2) || propertyName1 == propertyName2);
-            if (GUILayout.Button("Copy Property"))
+            if (GUILayout.Button(L("CopyProperty")))
             {
                 for (int i = 0; i < materials.Length; i++)
                 {
@@ -132,6 +146,7 @@ namespace EZhex1991.EZEditorTools
             }
             GUI.enabled = true;
 
+            EditorGUILayout.Space();
             scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition);
             for (int i = 0; i < materials.Length; i++)
             {

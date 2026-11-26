@@ -128,7 +128,22 @@ namespace EZhex1991.EZEditorTools
 
         protected void OnEnable()
         {
+            EZLocalization.LanguageChanged += OnLanguageChanged;
+            OnLanguageChanged();
             Refresh();
+        }
+
+        protected void OnDisable()
+        {
+            EZLocalization.LanguageChanged -= OnLanguageChanged;
+        }
+
+        private static string L(string key) => EZLocalization.Get<EZEditorPrefsEditor>(key);
+
+        private void OnLanguageChanged()
+        {
+            titleContent = new GUIContent(L("Title"));
+            Repaint();
         }
 
         protected void OnGUI()
@@ -136,9 +151,9 @@ namespace EZhex1991.EZEditorTools
             EZEditorGUIUtility.WindowTitle(this);
 
 #if UNITY_EDITOR_WIN && NET_STANDARD_2_0
-            EditorGUILayout.HelpBox("Api Compatibility Level Not Supported", MessageType.Error);
+            EditorGUILayout.HelpBox(L("UnsupportedApi"), MessageType.Error);
 #elif UNITY_EDITOR_WIN
-            if (GUILayout.Button("Refresh"))
+            if (GUILayout.Button(L("Refresh")))
             {
                 Refresh();
             }
@@ -172,7 +187,7 @@ namespace EZhex1991.EZEditorTools
                         EditorPrefs.SetFloat(key, input);
                 }
 
-                if (GUILayout.Button("Delete", GUILayout.Width(80)))
+                if (GUILayout.Button(L("Delete"), GUILayout.Width(80)))
                 {
                     EditorPrefs.DeleteKey(key);
                     Refresh();
@@ -180,14 +195,14 @@ namespace EZhex1991.EZEditorTools
                 EditorGUILayout.EndHorizontal();
             }
 
-            if (GUILayout.Button("Delete All"))
+            if (GUILayout.Button(L("DeleteAll")))
             {
                 EditorPrefs.DeleteAll();
                 Refresh();
             }
             EditorGUILayout.EndScrollView();
 #else
-            EditorGUILayout.HelpBox("Platform Not Supported", MessageType.Error);
+            EditorGUILayout.HelpBox(L("UnsupportedPlatform"), MessageType.Error);
 #endif
         }
     }

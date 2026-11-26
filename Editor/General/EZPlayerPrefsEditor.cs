@@ -72,7 +72,22 @@ namespace EZhex1991.EZEditorTools
 
         protected void OnEnable()
         {
+            EZLocalization.LanguageChanged += OnLanguageChanged;
+            OnLanguageChanged();
             Refresh();
+        }
+
+        protected void OnDisable()
+        {
+            EZLocalization.LanguageChanged -= OnLanguageChanged;
+        }
+
+        private static string L(string key) => EZLocalization.Get<EZPlayerPrefsEditor>(key);
+
+        private void OnLanguageChanged()
+        {
+            titleContent = new GUIContent(L("Title"));
+            Repaint();
         }
 
         protected void OnGUI()
@@ -80,9 +95,9 @@ namespace EZhex1991.EZEditorTools
             EZEditorGUIUtility.WindowTitle(this);
 
 #if UNITY_EDITOR_WIN && NET_STANDARD_2_0
-            EditorGUILayout.HelpBox("Api Compatibility Level Not Supported", MessageType.Error);
+            EditorGUILayout.HelpBox(L("UnsupportedApi"), MessageType.Error);
 #elif UNITY_EDITOR_WIN
-            if (GUILayout.Button("Refresh"))
+            if (GUILayout.Button(L("Refresh")))
             {
                 Refresh();
             }
@@ -122,23 +137,23 @@ namespace EZhex1991.EZEditorTools
                 }
                 else
                 {
-                    EditorGUILayout.TextField(key, "Unknown Type");
+                    EditorGUILayout.TextField(key, L("UnknownType"));
                 }
-                if (GUILayout.Button("Delete", new GUILayoutOption[] { GUILayout.Width(80), }))
+                if (GUILayout.Button(L("Delete"), new GUILayoutOption[] { GUILayout.Width(80), }))
                 {
                     PlayerPrefs.DeleteKey(key);
                     Refresh();
                 }
                 EditorGUILayout.EndHorizontal();
             }
-            if (GUILayout.Button("Delete All"))
+            if (GUILayout.Button(L("DeleteAll")))
             {
                 PlayerPrefs.DeleteAll();
                 Refresh();
             }
             EditorGUILayout.EndScrollView();
 #else
-            EditorGUILayout.HelpBox("Platform Not Supported", MessageType.Error);
+            EditorGUILayout.HelpBox(L("UnsupportedPlatform"), MessageType.Error);
 #endif
         }
     }

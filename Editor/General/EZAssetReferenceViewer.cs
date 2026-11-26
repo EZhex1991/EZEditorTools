@@ -24,8 +24,22 @@ namespace EZhex1991.EZEditorTools
 
         protected void OnEnable()
         {
+            EZLocalization.LanguageChanged += OnLanguageChanged;
+            OnLanguageChanged();
             dependenciesRecursive = EditorPrefs.GetBool(EZEditorPreferenceKeys.AssetReferenceDependenciesRecursive, true);
             Refresh();
+        }
+        protected void OnDisable()
+        {
+            EZLocalization.LanguageChanged -= OnLanguageChanged;
+        }
+
+        private static string L(string key) => EZLocalization.Get<EZAssetReferenceViewer>(key);
+
+        private void OnLanguageChanged()
+        {
+            titleContent = new GUIContent(L("Title"));
+            Repaint();
         }
         protected void OnSelectionChange()
         {
@@ -80,10 +94,10 @@ namespace EZhex1991.EZEditorTools
         protected void OnGUI()
         {
             EZEditorGUIUtility.WindowTitle(this);
-            EditorGUILayout.ObjectField("Target", target, typeof(Object), true);
+            EditorGUILayout.ObjectField(L("Target"), target, typeof(Object), true);
 
             EditorGUILayout.BeginHorizontal();
-            if (dependenciesRecursive != EditorGUILayout.Toggle("Show Recursive Dependencies", dependenciesRecursive))
+            if (dependenciesRecursive != EditorGUILayout.Toggle(L("RecursiveDependencies"), dependenciesRecursive))
             {
                 dependenciesRecursive = !dependenciesRecursive;
                 EditorPrefs.SetBool(EZEditorPreferenceKeys.AssetReferenceDependenciesRecursive, dependenciesRecursive);
@@ -93,7 +107,7 @@ namespace EZhex1991.EZEditorTools
             EditorGUILayout.Space();
 
             scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition);
-            if (dependenciesFoldout = EditorGUILayout.Foldout(dependenciesFoldout, "Asset Dependencies"))
+            if (dependenciesFoldout = EditorGUILayout.Foldout(dependenciesFoldout, L("Dependencies")))
             {
                 EditorGUI.indentLevel++;
                 for (int i = 0; i < dependencies.Count; i++)
@@ -103,7 +117,7 @@ namespace EZhex1991.EZEditorTools
                 }
                 EditorGUI.indentLevel--;
             }
-            if (referencesFoldout = EditorGUILayout.Foldout(referencesFoldout, "Scene References"))
+            if (referencesFoldout = EditorGUILayout.Foldout(referencesFoldout, L("SceneReferences")))
             {
                 EditorGUI.indentLevel++;
                 foreach (Object obj in sceneReferences)

@@ -45,7 +45,19 @@ namespace EZhex1991.EZEditorTools
 
         private void OnEnable()
         {
+            EZLocalization.LanguageChanged += OnLanguageChanged;
+            OnLanguageChanged();
             Refresh();
+        }
+        private void OnDisable()
+        {
+            EZLocalization.LanguageChanged -= OnLanguageChanged;
+        }
+        private static string L(string key) => EZLocalization.Get<EZCorrespondingObjectViewer>(key);
+        private void OnLanguageChanged()
+        {
+            titleContent = new GUIContent(L("Title"));
+            Repaint();
         }
         private void OnSelectionChange()
         {
@@ -54,20 +66,25 @@ namespace EZhex1991.EZEditorTools
         private void OnGUI()
         {
             EZEditorGUIUtility.WindowTitle(this);
-            EditorGUILayout.ObjectField("Target", target, typeof(Object), false);
+            EditorGUILayout.ObjectField(L("SelectedObject"), target, typeof(Object), false);
 
-            EditorGUILayout.EnumPopup("Prefab Asset Type", prefabAssetType);
-            EditorGUILayout.ObjectField("Original Object", originalObject, typeof(Object), false);
-            correspondingObjectsFoldout = EditorGUILayout.Foldout(correspondingObjectsFoldout, "Corresponding Objects");
+            EditorGUILayout.EnumPopup(L("PrefabAssetType"), prefabAssetType);
+            EditorGUILayout.ObjectField(L("OriginalSource"), originalObject, typeof(Object), false);
+            correspondingObjectsFoldout = EditorGUILayout.Foldout(correspondingObjectsFoldout, L("SourceChain"));
             if (correspondingObjectsFoldout)
             {
                 EditorGUI.indentLevel++;
+                EditorGUILayout.BeginHorizontal();
+                GUILayout.Space(30);
+                EditorGUILayout.LabelField(L("SourceObject"));
+                EditorGUILayout.LabelField(L("ContainingAsset"));
+                EditorGUILayout.EndHorizontal();
                 for (int i = 0; i < correspondingObjects.Count; i++)
                 {
                     EditorGUILayout.BeginHorizontal();
-                    EditorGUILayout.ObjectField(i.ToString("00"), correspondingObjects[i], typeof(Object), false);
-                    float width = (EditorGUIUtility.currentViewWidth - EditorGUIUtility.labelWidth) / 2;
-                    EditorGUILayout.ObjectField(correspondingAssets[i], typeof(Object), false, GUILayout.Width(width));
+                    GUILayout.Label(i.ToString("00"), GUILayout.Width(26));
+                    EditorGUILayout.ObjectField(correspondingObjects[i], typeof(Object), false);
+                    EditorGUILayout.ObjectField(correspondingAssets[i], typeof(Object), false);
                     EditorGUILayout.EndHorizontal();
                 }
                 EditorGUI.indentLevel--;
