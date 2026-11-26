@@ -11,71 +11,73 @@ namespace EZhex1991.EZEditorTools
 {
     public class EZAnimatorControllerCombiner : EditorWindow
     {
-        public class Combiner : ScriptableSingleton<Combiner>
-        {
-            public bool combineLayers = true;
-            public bool combineParameters = true;
-            public AnimatorController output;
-            public AnimatorController[] elements;
+        [SerializeField] private bool combineLayers = true;
+        [SerializeField] private bool combineParameters = true;
+        [SerializeField] private AnimatorController output;
+        [SerializeField] private AnimatorController[] elements;
 
-            public bool Combine()
-            {
-                if (output != null)
-                {
-                    if (combineLayers)
-                    {
-                        foreach (AnimatorController controller in elements)
-                        {
-                            foreach (AnimatorControllerLayer layer in controller.layers)
-                            {
-                                output.AddLayer(layer);
-                            }
-                        }
-                    }
-                    if (combineParameters)
-                    {
-                        foreach (AnimatorController controller in elements)
-                        {
-                            foreach (AnimatorControllerParameter parameter in controller.parameters)
-                            {
-                                output.AddParameter(parameter);
-                            }
-                        }
-                    }
-                    EditorUtility.SetDirty(output);
-                    return true;
-                }
-                return false;
-            }
+        private SerializedObject settings;
+
+        private static string L(string key) => EZLocalization.Get<EZAnimatorControllerCombiner>(key);
+
+        private void OnEnable()
+        {
+            settings = new SerializedObject(this);
+            settings.FindProperty("elements").isExpanded = true;
+            EZLocalization.LanguageChanged += OnLanguageChanged;
+            OnLanguageChanged();
         }
-        public static Combiner combiner { get { return Combiner.instance; } }
 
-        public static Editor m_CombinerEditor;
-        public static Editor combinerEditor
+        private void OnDisable() => EZLocalization.LanguageChanged -= OnLanguageChanged;
+
+        private void OnLanguageChanged()
         {
-            get
-            {
-                if (m_CombinerEditor == null)
-                {
-                    m_CombinerEditor = Editor.CreateEditor(combiner);
-                }
-                return m_CombinerEditor;
-            }
+            titleContent = new GUIContent(L("Title"));
+            Repaint();
         }
 
         protected void OnGUI()
         {
             EZEditorGUIUtility.WindowTitle(this);
 
-            combinerEditor.DrawDefaultInspector();
+            settings.Update();
+            EditorGUILayout.PropertyField(settings.FindProperty("combineLayers"), new GUIContent(L("Layers")));
+            EditorGUILayout.PropertyField(settings.FindProperty("combineParameters"), new GUIContent(L("Parameters")));
+            EditorGUILayout.PropertyField(settings.FindProperty("output"), new GUIContent(L("Target")));
+            EditorGUILayout.PropertyField(settings.FindProperty("elements"), new GUIContent(L("Sources")), true);
+            settings.ApplyModifiedProperties();
+            EditorGUILayout.HelpBox(L("Warning"), MessageType.Warning);
 
-            if (GUILayout.Button("Combine"))
+            if (GUILayout.Button(L("Append")))
             {
-                if (combiner.Combine())
+                if (Combine())
                 {
-                    Selection.activeObject = combiner.output;
+                    Selection.activeObject = output;
                 }
             }
+        }
+
+        private bool Combine()
+        {
+            if (output == null) return false;
+            if (combineLayers)
+            {
+                foreach (AnimatorController controller in elements)
+                {
+                    foreach (AnimatorControllerLayer layer in controller.layers)
+                        output.AddLayer(layer);
+                }
+            }
+            if (combineParameters)
+            {
+                foreach (AnimatorController controller in elements)
+                {
+                    foreach (AnimatorControllerParameter parameter in controller.parameters)
+                        output.AddParameter(parameter);
+                }
+            }
+            EditorUtility.SetDirty(output);
+            return true;
         }
     }
 }

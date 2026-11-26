@@ -24,6 +24,18 @@ namespace EZhex1991.EZEditorTools
 
         private void OnEnable()
         {
+            EZLocalization.LanguageChanged += OnLanguageChanged;
+            OnLanguageChanged();
+        }
+
+        private void OnDisable() => EZLocalization.LanguageChanged -= OnLanguageChanged;
+
+        private static string L(string key) => EZLocalization.Get<EZHierachyDiffChecker>(key);
+
+        private void OnLanguageChanged()
+        {
+            titleContent = new GUIContent(L("Title"));
+            Repaint();
         }
 
         private void OnGUI()
@@ -32,7 +44,7 @@ namespace EZhex1991.EZEditorTools
 
             EditorGUILayout.BeginHorizontal();
             EditorGUI.BeginChangeCheck();
-            rootTransform1 = (Transform)EditorGUILayout.ObjectField("Transform 1", rootTransform1, typeof(Transform), true);
+            rootTransform1 = (Transform)EditorGUILayout.ObjectField(L("Target"), rootTransform1, typeof(Transform), true);
             if (EditorGUI.EndChangeCheck())
             {
                 pathMap1.Clear();
@@ -42,7 +54,7 @@ namespace EZhex1991.EZEditorTools
                 }
             }
             EditorGUI.BeginChangeCheck();
-            rootTransform2 = (Transform)EditorGUILayout.ObjectField("Transform 2", rootTransform2, typeof(Transform), true);
+            rootTransform2 = (Transform)EditorGUILayout.ObjectField(L("Source"), rootTransform2, typeof(Transform), true);
             if (EditorGUI.EndChangeCheck())
             {
                 pathMap2.Clear();
@@ -53,7 +65,7 @@ namespace EZhex1991.EZEditorTools
             }
             EditorGUILayout.EndHorizontal();
 
-            if (GUILayout.Button("Copy TRS From 2"))
+            if (GUILayout.Button(new GUIContent(L("Copy"), L("CopyTooltip"))))
             {
                 rootTransform1.CopyTRSFrom(rootTransform2, true);
             }

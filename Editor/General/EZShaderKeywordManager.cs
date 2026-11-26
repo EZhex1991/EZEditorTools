@@ -76,7 +76,7 @@ namespace EZhex1991.EZEditorTools
                     }
                     else
                     {
-                        KeywordInfo info = new KeywordInfo(keyword);
+                        KeywordInfo info = new KeywordInfo(keyword, Shader.IsKeywordEnabled(keyword));
                         info.materials.Add(material);
                         keywordInfoDict.Add(keyword, info);
 
@@ -105,41 +105,61 @@ namespace EZhex1991.EZEditorTools
         {
             Repaint();
         }
+        private static string L(string key) => EZLocalization.Get<EZShaderKeywordManager>(key);
+
+        private void OnEnable()
+        {
+            EZLocalization.LanguageChanged += OnLanguageChanged;
+            OnLanguageChanged();
+        }
+
+        private void OnDisable() => EZLocalization.LanguageChanged -= OnLanguageChanged;
+
+        private void OnLanguageChanged()
+        {
+            titleContent = new GUIContent(L("Title"));
+            Repaint();
+        }
         protected void OnGUI()
         {
             EZEditorGUIUtility.WindowTitle(this);
 
             EditorGUILayout.Space();
-            EditorGUILayout.LabelField("Additional Keywords", EditorStyles.boldLabel);
+            EditorGUILayout.LabelField(L("AdditionalKeywords"), EditorStyles.boldLabel);
             EditorGUILayout.HelpBox(
-                "Paste space-separated keywords from shader warnings or logs. These keywords are added to the material scan results.",
+                L("AdditionalInfo"),
                 MessageType.Info);
             keywordStringFromWarning = EditorGUILayout.TextArea(keywordStringFromWarning, GUILayout.Height(80));
 
+            EditorGUILayout.Space();
+            EditorGUILayout.LabelField(L("ScanSection"), EditorStyles.boldLabel);
             Rect buttonRow = EditorGUILayout.GetControlRect(false, EditorGUIUtility.singleLineHeight);
             float buttonWidth = (buttonRow.width - 2f) * 0.5f;
             Rect leftButton = new Rect(buttonRow.x, buttonRow.y, buttonWidth, buttonRow.height);
             Rect rightButton = new Rect(buttonRow.x + buttonWidth + 2f, buttonRow.y, buttonWidth, buttonRow.height);
-            if (GUI.Button(leftButton, "Get Keywords"))
+            if (GUI.Button(leftButton, L("Scan")))
             {
                 GetKeywords();
             }
-            if (GUI.Button(rightButton, "Clear Results"))
+            if (GUI.Button(rightButton, L("Clear")))
             {
                 keywordInfoDict.Clear();
             }
 
+            EditorGUILayout.Space();
+            EditorGUILayout.LabelField(L("DisplaySection"), EditorStyles.boldLabel);
             buttonRow = EditorGUILayout.GetControlRect(false, EditorGUIUtility.singleLineHeight);
             leftButton = new Rect(buttonRow.x, buttonRow.y, buttonWidth, buttonRow.height);
             rightButton = new Rect(buttonRow.x + buttonWidth + 2f, buttonRow.y, buttonWidth, buttonRow.height);
-            if (GUI.Button(leftButton, "Expand All"))
+            if (GUI.Button(leftButton, L("Expand")))
             {
                 SetAllFoldouts(true);
             }
-            if (GUI.Button(rightButton, "Collapse All"))
+            if (GUI.Button(rightButton, L("Collapse")))
             {
                 SetAllFoldouts(false);
             }
+            EditorGUILayout.HelpBox(L("DisableInfo"), MessageType.Info);
             scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition);
             bool changed = false;
             int index = 0;
@@ -148,9 +168,9 @@ namespace EZhex1991.EZEditorTools
                 KeywordInfo keywordInfo = pair.Value;
                 EditorGUILayout.BeginHorizontal();
                 keywordInfo.foldout = EditorGUILayout.Foldout(keywordInfo.foldout, index++.ToString("000 ") + keywordInfo.keyword);
-                EditorGUILayout.LabelField("Count:" + keywordInfo.materials.Count, GUILayout.Width(80));
-                EditorGUILayout.LabelField("IsGlobal:" + keywordInfo.isGlobal, GUILayout.Width(120));
-                if (GUILayout.Button("Delete", GUILayout.Width(80)))
+                EditorGUILayout.LabelField(string.Format(L("Count"), keywordInfo.materials.Count), GUILayout.Width(100));
+                EditorGUILayout.LabelField(string.Format(L("GlobalEnabled"), keywordInfo.isGlobal), GUILayout.Width(175));
+                if (GUILayout.Button(L("Disable"), GUILayout.Width(80)))
                 {
                     foreach (Material mat in keywordInfo.materials)
                     {

@@ -19,10 +19,21 @@ namespace EZhex1991.EZEditorTools
 
         private void OnEnable()
         {
+            EZLocalization.LanguageChanged += OnLanguageChanged;
+            OnLanguageChanged();
             if (target != null)
             {
                 serializedObject = new SerializedObject(target);
             }
+        }
+        private void OnDisable() => EZLocalization.LanguageChanged -= OnLanguageChanged;
+
+        private static string L(string key) => EZLocalization.Get<EZPropertyPathViewer>(key);
+
+        private void OnLanguageChanged()
+        {
+            titleContent = new GUIContent(L("Title"));
+            Repaint();
         }
         protected void OnGUI()
         {
@@ -31,7 +42,7 @@ namespace EZhex1991.EZEditorTools
             EditorGUIUtility.wideMode = true;
 
             EditorGUI.BeginChangeCheck();
-            target = EditorGUILayout.ObjectField("Target", target, typeof(Object), true);
+            target = EditorGUILayout.ObjectField(L("Target"), target, typeof(Object), true);
             if (EditorGUI.EndChangeCheck())
             {
                 if (target != null)
@@ -43,11 +54,11 @@ namespace EZhex1991.EZEditorTools
                     serializedObject = null;
                 }
             }
-            enterChildren = EditorGUILayout.Toggle("Enter Children", enterChildren);
-            showInvisible = EditorGUILayout.Toggle("Show Invisible", showInvisible);
+            enterChildren = EditorGUILayout.Toggle(L("EnterChildren"), enterChildren);
+            showInvisible = EditorGUILayout.Toggle(L("ShowInvisible"), showInvisible);
 
             EditorGUILayout.Space();
-            EditorGUILayout.LabelField("Properties", EditorStyles.boldLabel);
+            EditorGUILayout.LabelField(L("Properties"), EditorStyles.boldLabel);
             // change scene will destroy target
             if (target != null && serializedObject != null)
             {

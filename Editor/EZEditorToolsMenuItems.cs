@@ -116,38 +116,38 @@ namespace EZhex1991.EZEditorTools
         private static void ShowCorrespondingObjectViewer() => EditorWindow.GetWindow<EZCorrespondingObjectViewer>().Show();
 
         [MenuItem(Root + "字体引用查看器丨Font Reference Viewer", false, (int)EZMenuOrder.FontReferenceViewer)]
-        private static void ShowFontReferenceViewer() => EditorWindow.GetWindow<EZFontReferenceViewer>("Font Reference Viewer").Show();
+        private static void ShowFontReferenceViewer() => EditorWindow.GetWindow<EZFontReferenceViewer>().Show();
 
         [MenuItem(Root + "层级差异检查器丨Hierarchy Diff Checker", false, (int)EZMenuOrder.HierachyDiffChecker)]
-        private static void ShowHierarchyDiffChecker() => EditorWindow.GetWindow<EZHierachyDiffChecker>("Hierarchy Diff Checker").Show();
+        private static void ShowHierarchyDiffChecker() => EditorWindow.GetWindow<EZHierachyDiffChecker>().Show();
 
         [MenuItem(Root + "属性路径查看器丨Property Path Viewer", false, (int)EZMenuOrder.PropertyPathViewer)]
-        private static void ShowPropertyPathViewer() => EditorWindow.GetWindow<EZPropertyPathViewer>("Property Path Viewer").Show();
+        private static void ShowPropertyPathViewer() => EditorWindow.GetWindow<EZPropertyPathViewer>().Show();
 
-        [MenuItem(Root + "Bundle包管理丨Asset Bundle Manager", false, (int)EZMenuOrder.AssetBundleManager)]
-        private static void ShowAssetBundleManager() => EditorWindow.GetWindow<EZBundleManager>("Asset Bundle Manager").Show();
+        [MenuItem(Root + "AssetBundle分配查看器丨AssetBundle Assignment Viewer", false, (int)EZMenuOrder.AssetBundleManager)]
+        private static void ShowAssetBundleManager() => EditorWindow.GetWindow<EZBundleManager>().Show();
 
         // SECTION_7
         [MenuItem(Root + "Guid生成器丨Guid Generator", false, (int)EZMenuOrder.GuidGenerator)]
-        private static void ShowGuidGenerator() => EditorWindow.GetWindow<EZGuidGenerator>("Guid Generator").Show();
+        private static void ShowGuidGenerator() => EditorWindow.GetWindow<EZGuidGenerator>().Show();
 
         [MenuItem(Root + "正则表达式测试丨Regex Tester", false, (int)EZMenuOrder.RegexTester)]
-        private static void ShowRegexTester() => EditorWindow.GetWindow<EZRegexTester>("Regex Tester").Show();
+        private static void ShowRegexTester() => EditorWindow.GetWindow<EZRegexTester>().Show();
 
         [MenuItem(Root + "颜色混合器丨Color Blender", false, (int)EZMenuOrder.ColorBlender)]
-        private static void ShowColorBlender() => EditorWindow.GetWindow<EZColorBlender>("Color Blender").Show();
+        private static void ShowColorBlender() => EditorWindow.GetWindow<EZColorBlender>().Show();
 
         [MenuItem(Root + "时间帮助面板丨Time Panel", false, (int)EZMenuOrder.TimePanel)]
-        private static void ShowTimePanel() => EditorWindow.GetWindow<EZTimePanel>(" Time Panel").Show();
+        private static void ShowTimePanel() => EditorWindow.GetWindow<EZTimePanel>().Show();
 
         [MenuItem(Root + "类型反射助手丨Type Reflection Helper", false, (int)EZMenuOrder.TypeReflectionHelper)]
-        private static void ShowTypeReflectionHelper() => EditorWindow.GetWindow<EZTypeReflectionHelper>("Type Reflection Helper").Show();
+        private static void ShowTypeReflectionHelper() => EditorWindow.GetWindow<EZTypeReflectionHelper>().Show();
 
         // SECTION_9
         [MenuItem(Root + "实验性功能丨Experimental/Shader关键字管理丨Shader Keyword Manager", false, (int)EZMenuOrder.ShaderKeywordManager)]
-        private static void ShowShaderKeywordManager() => EditorWindow.GetWindow<EZShaderKeywordManager>("ShaderKeyword Manager").Show();
+        private static void ShowShaderKeywordManager() => EditorWindow.GetWindow<EZShaderKeywordManager>().Show();
 
         [MenuItem(Root + "实验性功能丨Experimental/动画控制器合并器丨Animator Controller Combiner", false, (int)EZMenuOrder.AnimatorControllerCombiner)]
-        private static void ShowAnimatorControllerCombiner() => EditorWindow.GetWindow<EZAnimatorControllerCombiner>("Animator Controller Combiner").Show();
+        private static void ShowAnimatorControllerCombiner() => EditorWindow.GetWindow<EZAnimatorControllerCombiner>().Show();
     }
 }

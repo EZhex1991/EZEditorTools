@@ -17,6 +17,7 @@ namespace EZhex1991.EZEditorTools
         private static string typeName = "UnityEditor.GameView,UnityEditor";
         private static BindingFlags bindingFlags = ~BindingFlags.Default;
         private static Type type;
+        private static bool hasQueried;
 
         private static ReorderableList fieldList;
         private static ReorderableList propertyList;
@@ -27,6 +28,31 @@ namespace EZhex1991.EZEditorTools
         private static bool[] foldouts = new bool[8];
 
         private float margin = 2;
+
+        private static Rect DrawListIndex(Rect rect, int index, ReorderableList list)
+        {
+            float width = EZEditorGUIUtility.GetDigitWidth(list.count - 1);
+            EditorGUI.LabelField(new Rect(rect.x, rect.y, width, EditorGUIUtility.singleLineHeight), index.ToString());
+            rect.x += width;
+            rect.width -= width;
+            return rect;
+        }
+
+        private static string L(string key) => EZLocalization.Get<EZTypeReflectionHelper>(key);
+
+        private void OnEnable()
+        {
+            EZLocalization.LanguageChanged += OnLanguageChanged;
+            OnLanguageChanged();
+        }
+
+        private void OnDisable() => EZLocalization.LanguageChanged -= OnLanguageChanged;
+
+        private void OnLanguageChanged()
+        {
+            titleContent = new GUIContent(L("Title"));
+            Repaint();
+        }
 
         private void DrawFieldListHeader(Rect rect, ReorderableList list)
         {
@@ -47,7 +73,7 @@ namespace EZhex1991.EZEditorTools
         private void DrawFieldListElement(Rect rect, int index, ReorderableList list)
         {
             var info = list.list[index] as FieldInfo;
-            rect = EZEditorGUIUtility.DrawReorderableListIndex(rect, index, list);
+            rect = DrawListIndex(rect, index, list);
             float width = rect.width / 5;
             rect.height = EditorGUIUtility.singleLineHeight;
 
@@ -81,7 +107,7 @@ namespace EZhex1991.EZEditorTools
         private void DrawPropertyListElement(Rect rect, int index, ReorderableList list)
         {
             var info = list.list[index] as PropertyInfo;
-            rect = EZEditorGUIUtility.DrawReorderableListIndex(rect, index, list);
+            rect = DrawListIndex(rect, index, list);
             float width = rect.width / 5;
             rect.height = EditorGUIUtility.singleLineHeight;
 
@@ -115,7 +141,7 @@ namespace EZhex1991.EZEditorTools
         private void DrawMethodListElement(Rect rect, int index, ReorderableList list)
         {
             var info = list.list[index] as MethodInfo;
-            rect = EZEditorGUIUtility.DrawReorderableListIndex(rect, index, list);
+            rect = DrawListIndex(rect, index, list);
             float width = rect.width / 5;
             rect.height = EditorGUIUtility.singleLineHeight;
 
@@ -138,13 +164,14 @@ namespace EZhex1991.EZEditorTools
         private void DrawEnumNameListElement(Rect rect, int index, ReorderableList list)
         {
             var info = enumNameList.list[index] as string;
-            rect = EZEditorGUIUtility.DrawReorderableListIndex(rect, index, list);
+            rect = DrawListIndex(rect, index, list);
             rect.height = EditorGUIUtility.singleLineHeight;
             EditorGUI.TextField(rect, info);
         }
 
         private void GetTypeInfo()
         {
+            hasQueried = true;
             type = Type.GetType(typeName);
             for (int i = 0; i < foldouts.Length; i++)
             {
@@ -193,14 +220,26 @@ namespace EZhex1991.EZEditorTools
         {
             EZEditorGUIUtility.WindowTitle(this);
 
-            typeName = EditorGUILayout.TextField("Type Name", typeName);
+            typeName = EditorGUILayout.TextField(L("TypeName"), typeName);
             bindingFlags = (BindingFlags)EditorGUILayout.EnumFlagsField(bindingFlags);
-            if (GUILayout.Button("Get Type Info"))
+            if (GUILayout.Button(L("GetTypeInfo")))
             {
                 GetTypeInfo();
             }
 
-            if (type != null)
+            if (!hasQueried)
+            {
+                EditorGUILayout.HelpBox(L("NotQueried"), MessageType.Info);
+            }
+            else if (type == null)
+            {
+                EditorGUILayout.HelpBox(L("NotFound"), MessageType.Info);
+            }
+            else if (!type.IsClass && !type.IsEnum)
+            {
+                EditorGUILayout.HelpBox(L("Unsupported"), MessageType.Info);
+            }
+            else
             {
                 scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition);
                 DrawInfo(ref foldouts[0], "Fields", fieldList);
@@ -208,10 +247,6 @@ namespace EZhex1991.EZEditorTools
                 DrawInfo(ref foldouts[1], "Methods", methodList);
                 DrawInfo(ref foldouts[3], "Enum Names", enumNameList);
                 EditorGUILayout.EndScrollView();
-            }
-            else
-            {
-                EditorGUILayout.HelpBox("Not a valid type", MessageType.Info);
             }
         }
         private void DrawInfo(ref bool foldout, string label, ReorderableList list)

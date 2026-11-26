@@ -16,39 +16,54 @@ namespace EZhex1991.EZEditorTools
 
         private float height = EditorGUIUtility.singleLineHeight * 5;
 
+        private void OnEnable()
+        {
+            EZLocalization.LanguageChanged += OnLanguageChanged;
+            OnLanguageChanged();
+        }
+
+        private void OnDisable() => EZLocalization.LanguageChanged -= OnLanguageChanged;
+        private static string L(string key) => EZLocalization.Get<EZRegexTester>(key);
+        private void OnLanguageChanged()
+        {
+            titleContent = new GUIContent(L("Title"));
+            Repaint();
+        }
+
         protected void OnGUI()
         {
             EZEditorGUIUtility.WindowTitle(this);
 
-            EditorGUILayout.LabelField("Input", EditorStyles.boldLabel);
+            EditorGUILayout.LabelField(L("Input"), EditorStyles.boldLabel);
             inputString = EditorGUILayout.TextArea(inputString, GUILayout.MinHeight(height));
 
-            EditorGUILayout.LabelField("Regex", EditorStyles.boldLabel);
+            EditorGUILayout.LabelField(L("Regex"), EditorStyles.boldLabel);
             regexString = EditorGUILayout.TextArea(regexString, GUILayout.MinHeight(height));
 
-            EditorGUILayout.LabelField("Matches", EditorStyles.boldLabel);
+            EditorGUILayout.LabelField(L("Matches"), EditorStyles.boldLabel);
             try
             {
                 if (string.IsNullOrEmpty(regexString)) return;
                 foreach (Match match in Regex.Matches(inputString, regexString))
                 {
-                    EditorGUILayout.LabelField(string.Format("Match:\\tIndex: {0}\\tValue: {1}", match.Index, match.Value));
+                    EditorGUILayout.LabelField(string.Format(L("Match"), match.Index, match.Value));
                     EditorGUI.indentLevel++;
                     foreach (Group group in match.Groups)
                     {
-                        EditorGUILayout.LabelField(string.Format("Group:\\tIndex: {0}\\tValue: {1}", group.Index, group.Value));
+                        EditorGUILayout.LabelField(string.Format(L("Group"), group.Index, group.Value));
                         EditorGUI.indentLevel++;
                         foreach (Capture capture in group.Captures)
                         {
-                            EditorGUILayout.LabelField(string.Format("Capture:\\tIndex: {0}\\tValue: {1}", capture.Index, capture.Value));
+                            EditorGUILayout.LabelField(string.Format(L("Capture"), capture.Index, capture.Value));
                         }
                         EditorGUI.indentLevel--;
                     }
                     EditorGUI.indentLevel--;
                 }
             }
-            catch
+            catch (System.ArgumentException ex)
             {
+                EditorGUILayout.HelpBox(string.Format(L("InvalidRegex"), ex.Message), MessageType.Error);
             }
         }
     }

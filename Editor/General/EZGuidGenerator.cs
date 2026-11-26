@@ -21,19 +21,29 @@ namespace EZhex1991.EZEditorTools
 
         protected void OnEnable()
         {
+            EZLocalization.LanguageChanged += OnLanguageChanged;
+            OnLanguageChanged();
             RefreshGuid();
+        }
+
+        protected void OnDisable() => EZLocalization.LanguageChanged -= OnLanguageChanged;
+
+        private void OnLanguageChanged()
+        {
+            titleContent = new GUIContent(EZLocalization.Get<EZGuidGenerator>("Title"));
+            Repaint();
         }
 
         protected void OnGUI()
         {
             EZEditorGUIUtility.WindowTitle(this);
-            if (GUILayout.Button("Refresh"))
+            if (GUILayout.Button(EZLocalization.Get<EZGuidGenerator>("Generate")))
             {
                 RefreshGuid();
             }
-            EditorGUILayout.PrefixLabel("System Guid");
+            EditorGUILayout.PrefixLabel("System.Guid");
             EditorGUILayout.TextArea(systemGuid.ToString());
-            EditorGUILayout.PrefixLabel("Unity Guid");
+            EditorGUILayout.PrefixLabel("UnityEditor.GUID");
             EditorGUILayout.TextArea(unityGuid.ToString());
         }
     }

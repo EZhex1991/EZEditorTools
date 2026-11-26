@@ -22,24 +22,34 @@ namespace EZhex1991.EZEditorTools
 
         private void OnEnable()
         {
+            EZLocalization.LanguageChanged += OnLanguageChanged;
+            OnLanguageChanged();
             CalculateAll();
+        }
+
+        private void OnDisable() => EZLocalization.LanguageChanged -= OnLanguageChanged;
+        private static string L(string key) => EZLocalization.Get<EZColorBlender>(key);
+        private void OnLanguageChanged()
+        {
+            titleContent = new GUIContent(L("Title"));
+            Repaint();
         }
         private void OnGUI()
         {
             EZEditorGUIUtility.WindowTitle(this as EditorWindow);
 
-            EditorGUILayout.LabelField("Factors", EditorStyles.boldLabel);
-            useHDR = EditorGUILayout.Toggle("Use HDR", useHDR);
+            EditorGUILayout.LabelField(L("InputColors"), EditorStyles.boldLabel);
+            useHDR = EditorGUILayout.Toggle(L("UseHDR"), useHDR);
             {
                 EditorGUILayout.BeginHorizontal();
-                EditorGUILayout.LabelField("Source Color");
-                EditorGUILayout.LabelField("Destination Color");
+                EditorGUILayout.LabelField(L("Source"));
+                EditorGUILayout.LabelField(L("Destination"));
                 EditorGUILayout.EndHorizontal();
             }
             {
                 EditorGUILayout.BeginHorizontal();
-                srcColor = EditorGUILayout.ColorField(GUIContent.none, srcColor);
-                dstColor = EditorGUILayout.ColorField(GUIContent.none, dstColor);
+                srcColor = EditorGUILayout.ColorField(GUIContent.none, srcColor, true, true, useHDR);
+                dstColor = EditorGUILayout.ColorField(GUIContent.none, dstColor, true, true, useHDR);
                 EditorGUILayout.EndHorizontal();
             }
 
@@ -51,7 +61,8 @@ namespace EZhex1991.EZEditorTools
             float width = Mathf.Max(50, EditorGUIUtility.currentViewWidth / 4 - 5);
 
             EditorGUILayout.Space();
-            EditorGUILayout.LabelField("Results", EditorStyles.boldLabel);
+            EditorGUILayout.LabelField(L("Results"), EditorStyles.boldLabel);
+            if (useHDR) EditorGUILayout.HelpBox(L("HexInfo"), MessageType.Info);
 
             DrawResultsSingleLine(width, "Add", "Minus", "Multiply", "Divide");
             DrawResultsSingleLine(width, "Opacity", "Darken", "Lighten", "Screen");
@@ -71,7 +82,7 @@ namespace EZhex1991.EZEditorTools
             {
                 string name = resultNames[i];
                 EditorGUILayout.BeginVertical();
-                EditorGUILayout.LabelField(name, GUILayout.Width(width));
+                EditorGUILayout.LabelField(new GUIContent(L(name), name), GUILayout.Width(width));
                 EditorGUILayout.ColorField(GUIContent.none, resultColors[name], false, false, useHDR, GUILayout.Width(width));
                 EditorGUILayout.TextField(GUIContent.none, resultStrings[name], GUILayout.Width(width));
                 EditorGUILayout.EndVertical();

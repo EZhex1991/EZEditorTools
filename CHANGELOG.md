@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.4.0] - 2026-11-26
+
+### Added
+
+- Moved script template management, personal replacement patterns, and template samples from EZProjectSettings.
+- Added bilingual support to editor windows and localized window titles.
+- Added scene font viewing and replacement for UGUI Text and optional TextMeshPro components.
+- Added Unix timestamp and tick parsing to Time Panel.
+
+### Changed
+
+- Improved asset, hierarchy, shader keyword, and Animator Controller tool descriptions and controls.
+- Reorganized script tools and their localization entries.
+
 ## [1.3.0] - 2026-11-24
 
 ### Changed

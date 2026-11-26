@@ -37,11 +37,29 @@ namespace EZhex1991.EZEditorTools.Build
         private BundleDependenciesViewOption showDependencies = BundleDependenciesViewOption.Recursive;
         private Vector2 scrollPosition;
 
+        private static string L(string key) => EZLocalization.Get<EZBundleManager>(key);
+
+        private void OnEnable()
+        {
+            EZLocalization.LanguageChanged += OnLanguageChanged;
+            OnLanguageChanged();
+        }
+
+        private void OnDisable() => EZLocalization.LanguageChanged -= OnLanguageChanged;
+
+        private void OnLanguageChanged()
+        {
+            titleContent = new GUIContent(L("Title"));
+            Repaint();
+        }
+
         protected void OnGUI()
         {
             EZEditorGUIUtility.WindowTitle(this);
-            showAssets = (AssetsViewOption)EditorGUILayout.EnumPopup("Show Assets", showAssets);
-            showDependencies = (BundleDependenciesViewOption)EditorGUILayout.EnumPopup("Show Dependencies", showDependencies);
+            showAssets = (AssetsViewOption)EditorGUILayout.Popup(L("AssetDisplay"), (int)showAssets,
+                EZLocalization.GetOptions<EZBundleManager>("Object", "Path", "PathAndObject"));
+            showDependencies = (BundleDependenciesViewOption)EditorGUILayout.Popup(L("DependencyDisplay"), (int)showDependencies,
+                EZLocalization.GetOptions<EZBundleManager>("DontShow", "Direct", "Recursive"));
             scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition);
             DrawAssetBundleManager(showAssets, showDependencies);
             EditorGUILayout.EndScrollView();
@@ -55,11 +73,11 @@ namespace EZhex1991.EZEditorTools.Build
         public static void DrawAssetBundleManager(AssetsViewOption showAssets, BundleDependenciesViewOption showDependencies)
         {
             EditorGUILayout.BeginHorizontal();
-            if (GUILayout.Button("Refresh"))
+            if (GUILayout.Button(L("Refresh")))
             {
                 Refresh();
             }
-            if (GUILayout.Button("Remove Unused AssetBundleNames"))
+            if (GUILayout.Button(L("RemoveUnused")))
             {
                 AssetDatabase.RemoveUnusedAssetBundleNames();
                 Refresh();
@@ -86,10 +104,10 @@ namespace EZhex1991.EZEditorTools.Build
                     case BundleDependenciesViewOption.DontShow:
                         break;
                     case BundleDependenciesViewOption.Direct:
-                        DrawStringCollection("Dependencies", bundleInfo.dependencies);
+                        DrawStringCollection(L("Dependencies"), bundleInfo.dependencies);
                         break;
                     case BundleDependenciesViewOption.Recursive:
-                        DrawStringCollection("Dependencies", bundleInfo.recursiveDependencies);
+                        DrawStringCollection(L("Dependencies"), bundleInfo.recursiveDependencies);
                         break;
                 }
                 EditorGUI.indentLevel--;
