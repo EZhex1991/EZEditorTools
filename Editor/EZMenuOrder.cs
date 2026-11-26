@@ -14,6 +14,7 @@ namespace EZhex1991.EZEditorTools
 
         _____SECTION_1_____ = _____SECTION_0_____ + 100,
         HierarchyActiveToggle,
+        ScriptTemplateManager,
 
         _____SECTION_2_____ = _____SECTION_0_____ + 200,
         SaveAssets,

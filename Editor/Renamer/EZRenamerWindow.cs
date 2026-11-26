@@ -171,8 +171,19 @@ namespace EZhex1991.EZEditorTools
 
         protected void OnEnable()
         {
+            EZLocalization.LanguageChanged += OnLanguageChanged;
+            OnLanguageChanged();
             ResetConfigs();
             GetObjects();
+        }
+        protected void OnDisable()
+        {
+            EZLocalization.LanguageChanged -= OnLanguageChanged;
+        }
+        private void OnLanguageChanged()
+        {
+            titleContent = new GUIContent(EZLocalization.Get<EZRenamerWindow>("Title"));
+            Repaint();
         }
         protected void OnSelectionChange()
         {

@@ -54,12 +54,19 @@ namespace EZhex1991.EZEditorTools
         protected void OnEnable()
         {
             LoadPreferences();
-            EZLocalization.LanguageChanged += Repaint;
+            EZLocalization.LanguageChanged += OnLanguageChanged;
+            OnLanguageChanged();
         }
 
         protected void OnDisable()
         {
-            EZLocalization.LanguageChanged -= Repaint;
+            EZLocalization.LanguageChanged -= OnLanguageChanged;
+        }
+
+        private void OnLanguageChanged()
+        {
+            titleContent = new GUIContent(EZLocalization.Get<EZImageCanvasTool>("Title"));
+            Repaint();
         }
 
         private void LoadPreferences()

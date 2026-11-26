@@ -58,6 +58,8 @@ namespace EZhex1991.EZEditorTools
                 { EZLanguage.English, new Dictionary<string, string>() }
             };
 
+            Add(result, "EZImageCanvasTool", "Title", "图片画布工具", "Image Canvas Tool");
+            Add(result, "EZRenamerWindow", "Title", "批量重命名", "Renamer");
             Add(result, "EZImageCanvasTool", "ImageScope", "\u56fe\u7247\u8303\u56f4", "Image Scope");
             Add(result, "EZImageCanvasTool", "Scope.SelectedImages", "\u9009\u4e2d\u7684\u6240\u6709\u56fe\u7247", "Selected Images");
             Add(result, "EZImageCanvasTool", "Scope.SelectedFolder", "\u9009\u4e2d\u7684\u76ee\u5f55\u4e2d\u7684\u6240\u6709\u56fe\u7247", "Selected Folder");
@@ -103,6 +105,22 @@ namespace EZhex1991.EZEditorTools
             Add(result, "EZRenamerWindow", "ShowLog", "\u663e\u793a\u65e5\u5fd7", "Show Log");
             Add(result, "EZRenamerWindow", "Collapse", "\u6298\u53e0\u663e\u793a", "Collapse");
             Add(result, "EZRenamerWindow", "Processing", "\u5904\u7406\u4e2d", "Processing");
+            Add(result, "EZScriptTemplateManager", "Title", "脚本模板管理器", "Script Template Manager");
+            Add(result, "EZScriptTemplateManager", "TemplateList", "模板列表", "Template List");
+            Add(result, "EZScriptTemplateManager", "Patterns", "替换规则", "Patterns");
+            Add(result, "EZScriptTemplateManager", "CustomPatterns", "自定义规则", "Custom Patterns");
+            Add(result, "EZScriptTemplateManager", "FileExtensions", "文件扩展名", "File Extensions");
+            Add(result, "EZScriptTemplateManager", "ApplyPatterns", "对选中文件应用规则", "Apply Patterns to Selected Files");
+            Add(result, "EZScriptTemplateManager", "ApplyTitle", "应用替换规则", "Apply Patterns");
+            Add(result, "EZScriptTemplateManager", "ApplyConfirm", "将替换 {0} 个选中文件中的内容。此操作会修改文件。", "Apply patterns to {0} selected file(s)? This modifies the files.");
+            Add(result, "EZScriptTemplateManager", "Apply", "应用", "Apply");
+            Add(result, "EZScriptTemplateManager", "Cancel", "取消", "Cancel");
+            Add(result, "EZScriptTemplateManager", "AddTemplates", "添加模板", "Add Templates");
+            Add(result, "EZScriptTemplateManager", "TemplateInfo", "模板保存在当前 Unity 安装目录中，会影响使用此安装的其他项目。红色条目会覆盖已有模板。\n\n文件名格式：[优先级]-[菜单名称]__[子菜单名称]-[默认名称].[扩展名].txt", "Templates are managed in this Unity installation and affect other projects using it. Red entries will replace existing templates.\n\nFile Name Format: [priority]-[menu text]__[submenu text]-[default name].[ext].txt");
+            Add(result, "EZScriptTemplateManager", "NoTemplatesSelected", "未选择模板文件", "No Template Files Selected");
+            Add(result, "EZScriptTemplateManager", "AddSelectedTemplates", "添加选中的模板", "Add Selected Templates");
+            Add(result, "EZScriptTemplateManager", "OpenTemplateFolder", "打开模板目录", "Open Template Folder");
+            Add(result, "EZScriptTemplateManager", "Delete", "删除", "Delete");
             return result;
         }
 

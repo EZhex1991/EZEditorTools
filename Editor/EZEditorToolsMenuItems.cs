@@ -53,6 +53,9 @@ namespace EZhex1991.EZEditorTools
             return true;
         }
 
+        [MenuItem(Root + "脚本模板管理器丨Script Template Manager", false, (int)EZMenuOrder.ScriptTemplateManager)]
+        private static void ShowScriptTemplateManager() => EditorWindow.GetWindow<EZScriptTemplateManager>().Show();
+
         // SECTION_2
         [MenuItem(Root + "保存资产修改丨Save Assets", false, (int)EZMenuOrder.SaveAssets)]
         private static void SaveAssets() => AssetDatabase.SaveAssets();
@@ -97,10 +100,10 @@ namespace EZhex1991.EZEditorTools
 
         // SECTION_3
         [MenuItem(Root + "批量重命名丨Renamer", false, (int)EZMenuOrder.Renamer)]
-        private static void ShowRenamer() => EditorWindow.GetWindow<EZRenamerWindow>("Renamer").Show();
+        private static void ShowRenamer() => EditorWindow.GetWindow<EZRenamerWindow>().Show();
 
         [MenuItem(Root + "图片画布工具丨Image Canvas Tool", false, (int)EZMenuOrder.ImageCanvasTool)]
-        private static void ShowImageCanvasTool() => EditorWindow.GetWindow<EZImageCanvasTool>("Image Canvas Tool").Show();
+        private static void ShowImageCanvasTool() => EditorWindow.GetWindow<EZImageCanvasTool>().Show();
 
         [MenuItem(Root + "材质优化器丨Material Optimizer", false, (int)EZMenuOrder.MaterialOptimizer)]
         private static void ShowMaterialOptimizer() => EditorWindow.GetWindow<EZMaterialOptimizer>("Material Optimizer").Show();
