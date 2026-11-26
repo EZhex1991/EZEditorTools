@@ -84,7 +84,9 @@ The language can be switched between 简体中文 and English from `EZEditorTool
 
 The custom asset samples can be imported from **Window > Package Manager > EZEditorTools > Samples**.
 
-The sample assets are located at `Samples~/Demo/CustomAssets`, while the documentation and sample images are located at `Documentation~/Images`.
+The sample assets are located at `Samples~/Demo/CustomAssets`, script templates at `Samples~/Demo/ScriptTemplates`, and documentation images at `Documentation~/Images`.
+
+Use `EZEditorTools > 脚本模板管理器丨Script Template Manager` to manage script templates and personal replacement patterns.
 
 The `Bundle Builder` samples include configurations for EZ Bundle mode and Manager mode. The `Script Statistics` sample includes a script statistics configuration.
 

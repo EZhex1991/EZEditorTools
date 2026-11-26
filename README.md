@@ -79,7 +79,9 @@ EZEditorTools 是一个独立的 Unity 编辑器工具模块，提供通用的�
 
 自定义资产示例可以通过 **Window > Package Manager > EZEditorTools > Samples** 导入。
 
-示例资产位于 `Samples~/Demo/CustomAssets`，说明和示例图片位于 `Documentation~/Images`。
+示例资产位于 `Samples~/Demo/CustomAssets`，脚本模板位于 `Samples~/Demo/ScriptTemplates`，说明和示例图片位于 `Documentation~/Images`。
+
+通过 `EZEditorTools > 脚本模板管理器丨Script Template Manager` 管理脚本模板和个人替换规则。
 
 其中 `Bundle Builder` 示例包含 EZ Bundle 模式和 Manager 模式的配置示例，`Script Statistics` 示例包含代码统计配置示例。
 

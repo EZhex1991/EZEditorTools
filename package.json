@@ -7,7 +7,7 @@
   "samples": [
     {
       "displayName": "EZEditorTools Demo",
-      "description": "Example custom assets for EZEditorTools.",
+      "description": "Example custom assets and script templates for EZEditorTools.",
       "path": "Samples~/Demo"
     }
   ],
